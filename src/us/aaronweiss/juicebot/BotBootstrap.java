@@ -21,7 +21,7 @@
 package us.aaronweiss.juicebot;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 public class BotBootstrap {
-	private ScheduledThreadPoolExecutor stpe;
+	private ScheduledExecutorService scheduler;
 	private IBot bot;
 
 	/**
@@ -41,7 +41,7 @@ public class BotBootstrap {
 	 */
 	public BotBootstrap(IBot bot) {
 		this.bot = bot;
-		this.stpe = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Executors.defaultThreadFactory());
+		this.scheduler = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class BotBootstrap {
 										bot.periodic();
 									}
 								};
-			stpe.scheduleWithFixedDelay(command, 0, Integer.parseInt(bot.getConfiguration().get("BOT_PERIODIC")), TimeUnit.MILLISECONDS);
+			scheduler.scheduleWithFixedDelay(command, 0, Integer.parseInt(bot.getConfiguration().get("BOT_PERIODIC")), TimeUnit.MILLISECONDS);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class BotBootstrap {
 	 * Shuts down the boostrapped bot.
 	 */
 	public void shutdown() {
-		stpe.shutdown();
+		scheduler.shutdown();
 		bot.disconnect();
 	}
 }
