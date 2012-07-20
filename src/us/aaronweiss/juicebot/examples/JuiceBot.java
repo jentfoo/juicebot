@@ -76,9 +76,9 @@ public class JuiceBot extends AutoBot {
 	public static void main(String[] args) {
 		String serverInfo = args[0];
 		String[] serverData = serverInfo.split(":");
-		JuiceBot sweetie = new JuiceBot(serverData[0], serverData[1]);
-		sweetie.getConfiguration().put("BOT_OWNER", "aaronweiss74");
-		BotBootstrap bootstrap = new BotBootstrap(sweetie);
+		JuiceBot juice = new JuiceBot(serverData[0], serverData[1]);
+		juice.getConfiguration().put("BOT_OWNER", "aaronweiss74");
+		BotBootstrap bootstrap = new BotBootstrap(juice);
 		bootstrap.run();
 		Scanner input = new Scanner(System.in);
 		while (true) {

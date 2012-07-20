@@ -21,6 +21,8 @@
 package us.aaronweiss.juicebot;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -144,6 +146,22 @@ public class BotUtils {
 			}
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * Writes a message to the end of a file, creates the file if it doesn't exist.
+	 * @param message the message to write
+	 * @param file the file to write to
+	 */
+	public static void writeFile(String message, File file) {
+		try {
+			FileOutputStream out = new FileOutputStream(file, true);
+			out.write(message.getBytes());
+			out.write("\r\n".getBytes());
+			out.close();
+		} catch (IOException ess) {
+			// meh?
+		}
 	}
 	
 	/**
