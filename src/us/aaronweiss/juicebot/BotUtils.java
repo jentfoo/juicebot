@@ -20,7 +20,9 @@
  */
 package us.aaronweiss.juicebot;
 
+import java.io.File;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -143,4 +145,20 @@ public class BotUtils {
 		}
 		return builder.toString();
 	}
+	
+	/**
+	 * Parses a directory recursively and adds all <b>files</b> to the <code>list</code>.
+	 * @param directory the directory to parse
+	 * @param list the list to fill
+	 */
+	public static void parseDirectory(File directory, List<File> list) {
+		directory.setReadOnly();
+        File[] files = directory.listFiles();
+        for(int j = 0; j < files.length; j++) {
+            if(files[j].isDirectory())
+            	BotUtils.parseDirectory(files[j], list);
+            else 
+                list.add(files[j]);
+        }
+    }
 }
