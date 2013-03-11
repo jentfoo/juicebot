@@ -45,12 +45,11 @@ public class BotHandler extends ChannelInboundMessageHandlerAdapter<String> {
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) {
-		BotUtils.output("Connected.");
+		// Do something.
 	}
 	
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
-		BotUtils.output("Message received!");
 		String[] splitted = msg.split("\r\n");
 		for (String command : splitted) {
 			BotUtils.output(command);
@@ -61,12 +60,14 @@ public class BotHandler extends ChannelInboundMessageHandlerAdapter<String> {
 					resp += " " + sub[i];
 				}
 				ctx.write(resp + "\r\n");
+				BotUtils.output(resp + "\r\n");
 			} else if (sub[1].equals("PING")) {
 				String resp = "PONG";
 				for (int i = 2; i < sub.length; i++) {
 					resp += " " + sub[i];
 				}
 				ctx.write(resp + "\r\n");
+				BotUtils.output(resp + "\r\n");
 			} else {
 				bot.onMessage(sub);
 			}
@@ -80,6 +81,5 @@ public class BotHandler extends ChannelInboundMessageHandlerAdapter<String> {
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {		
 		this.bot.onDisconnect();
-		BotUtils.output("Disconnected.");
 	}
 }

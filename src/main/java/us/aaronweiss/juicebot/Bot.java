@@ -58,12 +58,14 @@ public abstract class Bot implements IBot {
 			protected void initChannel(OioSocketChannel ch) throws Exception {
 				ChannelPipeline pipeline = ch.pipeline();
 				// Decoders
-				 pipeline.addLast("frameDecoder", new LineBasedFrameDecoder(1000));
-				 pipeline.addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
-				 pipeline.addLast("botHandler", new BotHandler(Bot.this));
+				pipeline.addLast("frameDecoder", new LineBasedFrameDecoder(1000));
+				pipeline.addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
 
-				 // Encoder
-				 pipeline.addLast("stringEncoder", new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8));
+				// Encoder
+				pipeline.addLast("stringEncoder", new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8));
+			
+				// Handlers
+				pipeline.addLast("botHandler", new BotHandler(Bot.this));
 			}
 		});
 		bootstrap.option(ChannelOption.TCP_NODELAY, true);
