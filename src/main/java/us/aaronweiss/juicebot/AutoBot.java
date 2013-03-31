@@ -41,6 +41,8 @@ public abstract class AutoBot extends Bot {
 			this.write("PART " + message[3] + "\r\n");
 			this.config.put("BOT_NAME", this.config.get("BOT_NAME") + "_");
 			this.write("JOIN " + message[3] + "\r\n");
+		} else {
+			super.onMessage(message);
 		}
 	}
 

@@ -35,7 +35,7 @@ import us.aaronweiss.juicebot.BotUtils;
 public class SweetieBot extends AutoBot {
 	/**
 	 * Constructs a SweetieBot.
-	 * @param server the server to connect to
+	 * @param server the server to connect to/
 	 * @param port the port to connect on
 	 */
 	public SweetieBot(String server, String port) {
@@ -45,32 +45,33 @@ public class SweetieBot extends AutoBot {
 	@Override
 	public void onConnect() {
 		BotUtils.register(this);
+	}
+	
+	@Override
+	public void onReady() {
 		BotUtils.join("#vana", this);
 	}
 	
 	@Override
 	public void onMessage(String[] message) {
-		boolean isAdminCommand = false;
 		if (message[0].startsWith(":" + config.get("BOT_OWNER") + "!")) {
 			if (message[1].equals("PRIVMSG")) {
 				String line = BotUtils.joinStringFrom(message, 3);
 				if (line.startsWith(":SweetieBot:") && (line.contains("quit") || line.contains("gtfo"))) {
 					BotUtils.quit("http://www.youtube.com/watch?v=jiqt4C4M0dA", this);
 					this.disconnect();
-					isAdminCommand = true;
+					return;
 				}
 			}
 		}
-		if (!isAdminCommand) {
-			if (message[1].equals("PRIVMSG")) {
-				String line = BotUtils.joinStringFrom(message, 3);
-				if (line.matches("(?i)(.*)hug(.*)")) {
-					BotUtils.sayMe("hugs " + message[0].substring(1, message[0].indexOf("!")) + ".", message[2], this);
-					BotUtils.say("SET PHASERS TO HUG!", message[2], this);
-				}
-			} else {
-				super.onMessage(message);
+		if (message[1].equals("PRIVMSG")) {
+			String line = BotUtils.joinStringFrom(message, 3);
+			if (line.matches("(?i)(.*)hug(.*)")) {
+				BotUtils.sayMe("hugs " + message[0].substring(1, message[0].indexOf("!")) + ".", message[2], this);
+				BotUtils.say("SET PHASERS TO HUG!", message[2], this);
 			}
+		} else {
+			super.onMessage(message);
 		}
 	}
 	

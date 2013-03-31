@@ -74,7 +74,13 @@ public abstract class Bot implements IBot {
 		config.put("BOT_PERIODIC", "-1");
 	}
 	
-	public abstract void onConnect();
+	public void onMessage(String[] message) {
+		if (message[1].equals("MODE")) {
+			if (message[0].equals(":" + this.getConfiguration().get("BOT_NAME")) && message[2].equals(this.getConfiguration().get("BOT_NAME"))) {
+				this.onReady();
+			}
+		}
+	}
 
 	public void onDisconnect() {
 		this.session = null;

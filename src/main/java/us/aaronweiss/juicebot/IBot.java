@@ -33,6 +33,11 @@ public interface IBot {
 	public void onConnect();
 	
 	/**
+	 * Performs the desired actions once the bot is registered and ready to go.
+	 */
+	public void onReady();
+	
+	/**
 	 * Performs the desired actions on message received.
 	 * @param message the message received, split by spaces.
 	 */

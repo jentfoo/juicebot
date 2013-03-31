@@ -40,6 +40,10 @@ public class JuiceBot extends AutoBot {
 	@Override
 	public void onConnect() {
 		BotUtils.register(this);
+	}
+	
+	@Override
+	public void onReady() {
 		BotUtils.join("#vana", this);
 	}
 	
