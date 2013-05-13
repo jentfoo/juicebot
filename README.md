@@ -1,7 +1,7 @@
 # juicebot #
 juicebot is a simple and fast library for creating IRC bots using [Netty](http://www.netty.io). It provides a very simple API for creating an IRC bot and an even simpler utility class for working with them. 
 
-## An example. ##
+### An example. ###
 
 	public class Example1 extends Bot {
 		public Example1(String server, String port) {
@@ -20,7 +20,7 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 		}
 	}
 	
-## Another example. ##
+### Another example. ###
 
 	public class Example2 extends Bot {
 		public Example2(String server, String port) {
@@ -42,7 +42,7 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 		}
 	}
 
-## Once more... with feeling! ##
+### Once more... with feeling! ###
 
 	public class Example3 extends Bot {
 		public Example3(String server, String port) {
@@ -61,11 +61,37 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 				if (line.matches("(?i)(.*)say you're happy now(.*)")) {
 					BotUtils.say("once more, with feeling.", message[2], this);
 				}
-				} else {
-					super.onMessage(message);
-				}
+			} else {
+				super.onMessage(message);
 			}
 		}
+	}
+
+### Now with SSL support! ###
+
+	public class Example4 extends Bot {
+		public Example4(String server, String port) {
+			// n.b. you'll need to add self-signed certs to your keystore or this'll be a problem.
+			super("Example4", server, port, true); // Yep, it was that easy.
+		}
+
+		@Override
+		public void onReady() {
+			BotUtils.join("#channel", this);
+		}
+	
+		@Override
+		public void onMessage(String[] message) {
+			if (message[1].equals("PRIVMSG")) {
+				String line = BotUtils.joinStringFrom(message, 3);
+				if (line.matches("(?i)(.*)say you're happy now(.*)")) {
+					BotUtils.say("once more, with feeling.", message[2], this);
+				}
+			} else {
+				super.onMessage(message);
+			}
+		}
+	}
 
 ### Acknowledgements ###
 * [angelsl](http://www.github.com/angelsl) for helping with the IRC protocol stuff.
