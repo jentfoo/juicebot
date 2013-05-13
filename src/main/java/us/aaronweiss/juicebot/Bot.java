@@ -47,7 +47,7 @@ public abstract class Bot implements IBot {
 	protected final Bootstrap bootstrap;
 	protected final Configuration config;
 	protected Channel session;
-	
+
 	public Bot(String username, String server, String port) {
 		bootstrap = new Bootstrap();
 		bootstrap.group(new OioEventLoopGroup());
@@ -62,7 +62,7 @@ public abstract class Bot implements IBot {
 
 				// Encoder
 				pipeline.addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8));
-			
+
 				// Handlers
 				pipeline.addLast("botHandler", new BotHandler(Bot.this));
 			}
@@ -72,12 +72,10 @@ public abstract class Bot implements IBot {
 		config = new Configuration(username, server, port);
 		config.put("BOT_PERIODIC", "-1");
 	}
-	
+
 	public void onMessage(String[] message) {
-		if (message[1].equals("MODE")) {
-			if (message[0].equals(":" + this.getConfiguration().get("BOT_NAME")) && message[2].equals(this.getConfiguration().get("BOT_NAME"))) {
-				this.onReady();
-			}
+		if (this.isReadyMessage(message)) {
+			this.onReady();
 		}
 	}
 
@@ -88,18 +86,18 @@ public abstract class Bot implements IBot {
 	public void periodic() {
 		BotUtils.output("BOT_PERIODIC is set without overriding default Bot.periodic()");
 	}
-	
+
 	public void connect() {
 		BotUtils.output("Connecting to " + config.get("IRC_SERVER") + ":" + config.get("IRC_PORT"));
 		ChannelFuture cf = this.bootstrap.connect(new InetSocketAddress(config.get("IRC_SERVER"), Integer.parseInt(config.get("IRC_PORT"))));
 		cf.syncUninterruptibly();
 		this.session = cf.channel();
 	}
-	
+
 	public void write(String message) {
 		this.session.write(message);
 	}
-	
+
 	public void disconnect() {
 		ChannelFuture cf = this.session.disconnect();
 		cf.syncUninterruptibly();
@@ -109,7 +107,13 @@ public abstract class Bot implements IBot {
 	public boolean isConnected() {
 		return this.session.isActive();
 	}
-	
+
+	public boolean isReadyMessage(String[] message) {
+		return message[1].equals("MODE") &&
+				message[0].equals(":" + this.getConfiguration().get("BOT_NAME")) &&
+				message[2].equals(this.getConfiguration().get("BOT_NAME"));
+	}
+
 	public Configuration getConfiguration() {
 		return config;
 	}
