@@ -21,7 +21,6 @@
 package us.aaronweiss.juicebot;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.BufType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -62,7 +61,7 @@ public abstract class Bot implements IBot {
 				pipeline.addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
 
 				// Encoder
-				pipeline.addLast("stringEncoder", new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8));
+				pipeline.addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8));
 			
 				// Handlers
 				pipeline.addLast("botHandler", new BotHandler(Bot.this));
