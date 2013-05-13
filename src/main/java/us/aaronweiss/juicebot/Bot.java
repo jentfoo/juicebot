@@ -31,16 +31,20 @@ import io.netty.channel.socket.oio.OioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.util.CharsetUtil;
 
 import java.net.InetSocketAddress;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 
 import us.aaronweiss.juicebot.net.BotHandler;
 
 /**
  * The abstract base for all bots, as it handles network bootstrapping.
  * @author Aaron Weiss
- * @version 1.0
+ * @version 1.3
  * @since 1.0
  */
 public abstract class Bot implements IBot {
@@ -49,6 +53,10 @@ public abstract class Bot implements IBot {
 	protected Channel session;
 
 	public Bot(String username, String server, String port) {
+		this(username, server, port, false);
+	}
+	
+	public Bot(String username, String server, String port, final boolean useSSL) {
 		bootstrap = new Bootstrap();
 		bootstrap.group(new OioEventLoopGroup());
 		bootstrap.channel(OioSocketChannel.class);
@@ -56,6 +64,14 @@ public abstract class Bot implements IBot {
 			@Override
 			protected void initChannel(OioSocketChannel ch) throws Exception {
 				ChannelPipeline pipeline = ch.pipeline();
+				
+				// SSL Support
+				if (useSSL) {
+					SSLEngine engine = SSLContext.getDefault().createSSLEngine();
+					engine.setUseClientMode(true);
+					pipeline.addLast("ssl", new SslHandler(engine));
+				}
+				
 				// Decoders
 				pipeline.addLast("frameDecoder", new LineBasedFrameDecoder(1000));
 				pipeline.addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
@@ -108,7 +124,7 @@ public abstract class Bot implements IBot {
 		return this.session.isActive();
 	}
 
-	public boolean isReadyMessage(String[] message) {
+	protected boolean isReadyMessage(String[] message) {
 		return message[1].equals("MODE") &&
 				message[0].equals(":" + this.getConfiguration().get("BOT_NAME")) &&
 				message[2].equals(this.getConfiguration().get("BOT_NAME"));

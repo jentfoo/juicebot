@@ -28,11 +28,17 @@ import us.aaronweiss.juicebot.BotUtils;
 
 /**
  * A basic IRC bot, who just wants some juice. 
+ * 
  * @author Aaron Weiss
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
 public class JuiceBot extends AutoBot {
+	/**
+	 * Constructs a JuiceBot.
+	 * @param server the server to connect to
+	 * @param port the port to connect on
+	 */
 	public JuiceBot(String server, String port) {
 		super("JuiceBot", server, port);
 	}

@@ -29,11 +29,14 @@ import java.util.TimeZone;
 
 /**
  * A set of static utilities to be used by bots.
+ * 
  * @author Aaron Weiss
- * @version 1.0
+ * @version 2.0
  * @since 1.0
  */
 public class BotUtils {
+	// TODO: Clean all of this up and/or find a better design pattern for it.
+	
 	/**
 	 * Registers the <code>bot</code> with the server it's connected to.
 	 * @param bot the bot to register

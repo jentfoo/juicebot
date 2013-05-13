@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Aaron Weiss <aaronweiss74@gmail.com>
+ * Copyright (c) 2013 Aaron Weiss <aaronweiss74@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -31,7 +31,7 @@ import java.net.InetSocketAddress;
 /**
  * An abstract base for a bot that manages it's own connection to multiple servers.
  * @author Aaron Weiss
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public abstract class MultiServerBot extends Bot {
@@ -39,6 +39,10 @@ public abstract class MultiServerBot extends Bot {
 	
 	public MultiServerBot(String username, String server, String port) {
 		super(username, server, port);
+	}
+	
+	public MultiServerBot(String username, String server, String port, boolean useSSL) {
+		super(username, server, port, useSSL);
 	}
 	
 	@Override

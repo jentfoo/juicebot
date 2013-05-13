@@ -28,6 +28,7 @@ import us.aaronweiss.juicebot.BotUtils;
 
 /**
  * A basic IRC bot, and a blatant reference to My Little Pony: Friendship is Witchcraft.
+ * 
  * @author Aaron Weiss
  * @version 1.0
  * @since 1.0
@@ -35,7 +36,7 @@ import us.aaronweiss.juicebot.BotUtils;
 public class SweetieBot extends AutoBot {
 	/**
 	 * Constructs a SweetieBot.
-	 * @param server the server to connect to/
+	 * @param server the server to connect to
 	 * @param port the port to connect on
 	 */
 	public SweetieBot(String server, String port) {

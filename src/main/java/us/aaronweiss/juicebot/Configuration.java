@@ -23,7 +23,7 @@ package us.aaronweiss.juicebot;
 import java.util.HashMap;
 
 /**
- * A bot configuration file.
+ * A bot configuration map.
  * @author Aaron Weiss
  * @version 2.0
  * @since 1.0

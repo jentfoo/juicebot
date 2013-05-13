@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Aaron Weiss <aaronweiss74@gmail.com>
+ * Copyright (c) 2013 Aaron Weiss <aaronweiss74@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -24,12 +24,16 @@ package us.aaronweiss.juicebot;
  * A base for a bot that auto-rejoins upon being kicked, and attempts to avert poor bans.
  * N.b. You must call super.onMessage() when you override it in order to receive desired functionality.
  * @author Aaron Weiss
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public abstract class AutoBot extends Bot {
 	public AutoBot(String username, String server, String port) {
 		super(username, server, port);
+	}
+	
+	public AutoBot(String username, String server, String port, boolean useSSL) {
+		super(username, server, port, useSSL);
 	}
 
 	public void onMessage(String[] message) {
