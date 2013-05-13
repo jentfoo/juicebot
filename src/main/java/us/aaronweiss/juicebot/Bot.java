@@ -94,6 +94,10 @@ public abstract class Bot implements IBot {
 			this.onReady();
 		}
 	}
+	
+	public void onConnect() {
+		BotUtils.register(this);
+	}
 
 	public void onDisconnect() {
 		this.session = null;

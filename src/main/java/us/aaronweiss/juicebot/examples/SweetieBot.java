@@ -42,11 +42,6 @@ public class SweetieBot extends AutoBot {
 	public SweetieBot(String server, String port) {
 		super("SweetieBot", server, port);
 	}
-
-	@Override
-	public void onConnect() {
-		BotUtils.register(this);
-	}
 	
 	@Override
 	public void onReady() {

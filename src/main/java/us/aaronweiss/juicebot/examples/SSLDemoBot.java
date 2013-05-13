@@ -23,11 +23,6 @@ public class SSLDemoBot extends AutoBot {
 	public SSLDemoBot(String server, String port) {
 		super("SSLDemoBot", server, port, true);
 	}
-
-	@Override
-	public void onConnect() {
-		BotUtils.register(this);
-	}
 	
 	@Override
 	public void onReady() {

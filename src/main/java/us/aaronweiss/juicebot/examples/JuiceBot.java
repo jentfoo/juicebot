@@ -42,11 +42,6 @@ public class JuiceBot extends AutoBot {
 	public JuiceBot(String server, String port) {
 		super("JuiceBot", server, port);
 	}
-
-	@Override
-	public void onConnect() {
-		BotUtils.register(this);
-	}
 	
 	@Override
 	public void onReady() {
