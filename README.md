@@ -53,6 +53,7 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 			if (Bot.containsIgnoreCase("say you're happy now", message.message())) {
 				message.reply("Once more, with feeling!");
 			}
+			super.receive(message);
 		}
 	}
 
@@ -74,6 +75,7 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 			if (Bot.containsIgnoreCase("say you're happy now", message.message())) {
 				message.reply("Once more, with feeling!");
 			}
+			super.receive(message);
 		}
 	}
 	
