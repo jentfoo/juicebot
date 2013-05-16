@@ -1,68 +1,57 @@
 # juicebot #
-juicebot is a simple and fast library for creating IRC bots using [Netty](http://www.netty.io). It provides a very simple API for creating an IRC bot and an even simpler utility class for working with them. 
+juicebot is a simple and fast library for creating IRC bots using [Netty](http://www.netty.io). It provides a very simple, easy-to-use API for creating an IRC bot. juicebot 2 now sports a redesigned API offering both the traditional simple API with string arrays, and an elegant new POJO-based API.
 
 ### An example. ###
 
-	public class Example1 extends Bot {
-		public Example1(String server, String port) {
-			super("Example1", server, port);
+	public class Example1 extends SimpleBot {
+		public Example1() {
+			super("Example1");
 		}
 		
 		@Override
-		public void onReady() {
-			BotUtils.join("#channel", this);
-		}
-		
-		@Override
-		public void onMessage(String[] message) {
-			BotUtils.say("I'm really annoying.", message[2], this);
-			super.onMessage(message);
+		public void receive(String[] message, Channel session) {
+			for (String token : message)
+				if (token.startsWith("#"))
+					this.join(token);
+			this.say("I'm really annoying.", message[2], session);
 		}
 	}
 	
 ### Another example. ###
 
-	public class Example2 extends Bot {
-		public Example2(String server, String port) {
-			super("Example2", server, port);
+	public class Example2 extends MessageBot {
+		public Example2() {
+			super("Example2");
 		}
 	
 		@Override
-		public void onReady() {
-		BotUtils.join("#channel", this);
-		}
-	
-		@Override
-		public void onMessage(String[] message) {
-			if (message[1].equals("PRIVMSG")) {
-				BotUtils.say("I'm just slightly less annoying.", message[2], this);
-			} else {
-				super.onMessage(message);
+		public void receive(Message message);
+			if (message.type().equals("PRIVMSG")) {
+				for (String token : message)
+					if (token.startsWith("#"))
+						this.join(token);
+				if (message.channel().startsWith("#"))
+					message.reply("I'm just slightly less annoying.");
 			}
 		}
 	}
 
 ### Once more... with feeling! ###
 
-	public class Example3 extends Bot {
-		public Example3(String server, String port) {
-			super("Example3", server, port);
+	public class Example3 extends AutoBot {
+		public Example3() {
+			super("Example3");
 		}
 	
 		@Override
-		public void onReady() {
-			BotUtils.join("#channel", this);
+		public void joinAll() {
+			this.join("#channel");
 		}
 		
 		@Override
-		public void onMessage(String[] message) {
-			if (message[1].equals("PRIVMSG")) {
-				String line = BotUtils.joinStringFrom(message, 3);
-				if (line.matches("(?i)(.*)say you're happy now(.*)")) {
-					BotUtils.say("once more, with feeling.", message[2], this);
-				}
-			} else {
-				super.onMessage(message);
+		public void receive(Message message) {
+			if (Bot.containsIgnoreCase("say you're happy now", message.message())) {
+				message.reply("Once more, with feeling!");
 			}
 		}
 	}
@@ -70,31 +59,30 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 ### Now with SSL support! ###
 
 	public class Example4 extends Bot {
-		public Example4(String server, String port) {
+		public Example4() {
 			// n.b. you'll need to add self-signed certs to your keystore or this'll be a problem.
-			super("Example4", server, port, true); // Yep, it was that easy.
+			super("Example4", true); // Yep, it was that easy.
 		}
 
 		@Override
-		public void onReady() {
-			BotUtils.join("#channel", this);
+		public void joinAll() {
+			this.join("#channel");
 		}
-	
+
 		@Override
-		public void onMessage(String[] message) {
-			if (message[1].equals("PRIVMSG")) {
-				String line = BotUtils.joinStringFrom(message, 3);
-				if (line.matches("(?i)(.*)say you're happy now(.*)")) {
-					BotUtils.say("once more, with feeling.", message[2], this);
-				}
-			} else {
-				super.onMessage(message);
+		public void receive(Message message) {
+			if (Bot.containsIgnoreCase("say you're happy now", message.message())) {
+				message.reply("Once more, with feeling!");
 			}
 		}
 	}
+	
+### Need more examples? ###
+Just check out the Examples included in the source code! There's an improved version of the bot in Example3 named Sweet, made in honor of the demon from Buffy the Vampire Slayer's "Once More With Feeling." There's also a basic statistics bot named Stati that can provide you mostly useless information as a demonstration of the new work-in-progress information API. Of course, there's also a new version of the classic "pass the juice" JuiceBot from which the library got its name.
 
 ### Acknowledgements ###
 * [angelsl](http://www.github.com/angelsl) for helping with the IRC protocol stuff.
 * [Peter Atashian](http://www.github.com/retep998) for helping with testing.
 * [rice](http://www.github.com/wahlao) for the inspiration.
 * [FyreChat](http://www.fyrechat.net/) for allowing me to build this library on it.
+* [Mitchell Andrews](http://wobbier.com/) for helping the library gain some steam.
