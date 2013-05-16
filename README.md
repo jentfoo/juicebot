@@ -1,5 +1,5 @@
 # juicebot #
-juicebot is a simple and fast library for creating IRC bots using [Netty](http://www.netty.io). It provides a very simple, easy-to-use API for creating an IRC bot. juicebot 2 now sports a redesigned API offering both the traditional simple API with string arrays, and an elegant new POJO-based API.
+juicebot is a simple and fast library for creating IRC bots using [Netty](http://www.netty.io). It provides a very simple, easy-to-use API for creating an IRC bot. juicebot 2 now sports a redesigned API offering both the traditional simple API with string arrays, and an elegant new POJO-based API. You can find javadocs for juicebot [here](http://aaronweiss74.github.io/juicebot/doc/).
 
 ### An example. ###
 
