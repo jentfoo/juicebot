@@ -58,10 +58,10 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 
 ### Now with SSL support! ###
 
-	public class Example4 extends Bot {
+	public class Example4 extends AutoBot {
 		public Example4() {
 			// n.b. you'll need to add self-signed certs to your keystore or this'll be a problem.
-			super("Example4", true); // Yep, it was that easy.
+			super("Example4", false, true); // Yep, it was that easy.
 		}
 
 		@Override

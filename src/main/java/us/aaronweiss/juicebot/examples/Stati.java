@@ -30,7 +30,6 @@ import us.aaronweiss.juicebot.Message;
 import us.aaronweiss.juicebot.SessionData;
 
 public class Stati extends DataAwareBot {
-
 	public Stati() {
 		super("Stati", false);
 	}

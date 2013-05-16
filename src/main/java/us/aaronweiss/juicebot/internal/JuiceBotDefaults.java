@@ -20,6 +20,16 @@
  */
 package us.aaronweiss.juicebot.internal;
 
+/**
+ * A set of changeable defaults for the juicebot library.
+ * 
+ * @author Aaron Weiss
+ * @version 1.0
+ * @since 2.0
+ */
 public class JuiceBotDefaults {
+	/**
+	 * Should bots be verbose by default?
+	 */
 	public static boolean VERBOSE_BY_DEFAULT = true;
 }

@@ -49,7 +49,7 @@ import us.aaronweiss.juicebot.internal.InternalUtilities;
 import us.aaronweiss.juicebot.net.ClientHandlerAdapter;
 
 /**
- * 
+ * The core of all juicebot bots, handling all necessary internals.
  * 
  * @author Aaron Weiss
  * @version 2.0
@@ -64,14 +64,32 @@ public abstract class Bot implements Client {
 	private final boolean simple;
 	private String username;
 	
+	/**
+	 * Constructs a new <code>Bot</code>.
+	 * 
+	 * @param username the username of the bot
+	 */
 	public Bot(String username) {
 		this(username, false);
 	}
-		
+
+	/**
+	 * Constructs a new <code>Bot</code>.
+	 * 
+	 * @param username the username of the bot
+	 * @param simple whether or not the bot should use the simple messaging API
+	 */
 	public Bot(String username, boolean simple) {
 		this(username, simple, false);
 	}
 	
+	/**
+	 * Constructs a new <code>Bot</code>.
+	 * 
+	 * @param username the username of the bot
+	 * @param simple whether or not the bot should use the simple messaging API
+	 * @param useSSL whether or not the bot should use SSL
+	 */
 	public Bot(String username, boolean simple, final boolean useSSL) {
 		this.username = username;
 		this.simple = simple;
@@ -152,7 +170,7 @@ public abstract class Bot implements Client {
 	}
 	
 	@Override
-	public void connected(SocketAddress address) {
+	public void connected(Channel session) {
 		this.setUsername(username);
 	}
 	
@@ -217,10 +235,20 @@ public abstract class Bot implements Client {
 		this.receive(message.toString(), message.session());
 	}
 	
+	/**
+	 * Gets the username of the bot.
+	 * 
+	 * @return the bot's username
+	 */
 	protected String username() {
 		return this.username;
 	}
 	
+	/**
+	 * Sets the bot's username and sends re-registration commands.
+	 * 
+	 * @param username the desired new username
+	 */
 	protected void setUsername(String username) {
 		this.username = username;
 		this.send("NICK :" + username + "\r\n");
@@ -228,58 +256,133 @@ public abstract class Bot implements Client {
 	}
 	
 	// Common IRC Operations
+	
+	/**
+	 * Instructs the bot to join the specified channel.
+	 * @param channel the channel to join
+	 */
 	public void join(String channel) {
 		this.send("JOIN " + channel + "\r\n");
 	}
-	
+
+	/**
+	 * Instructs the bot to join the specified channel.
+	 * @param channel the channel to join
+	 * @param session the session to join on
+	 */
 	public void join(String channel, Channel session) {
 		this.send("JOIN " + channel + "\r\n", session);
 	}
 	
+	/**
+	 * Instructs the bot to part the specified channel.
+	 * @param channel the channel to part
+	 */
 	public void part(String channel) {
 		this.send("PART " + channel + "\r\n");
 	}	
 	
+	/**
+	 * Instructs the bot to part the specified channel.
+	 * @param channel the channel to part
+	 * @param session the session to part on
+	 */
 	public void part(String channel, Channel session) {
 		this.send("PART " + channel + "\r\n", session);
 	}
 	
+	/**
+	 * Instructs the bot to part the specified channel with a reason.
+	 * @param channel the channel to part
+	 * @param reason the reason for parting
+	 */
 	public void part(String channel, String reason) {
 		this.send("PART " + channel + " :" + reason + "\r\n");
 	}
-	
+
+	/**
+	 * Instructs the bot to part the specified channel with a reason.
+	 * @param channel the channel to part
+	 * @param reason the reason for parting
+	 * @param session the session to part on
+	 */
 	public void part(String channel, String reason, Channel session) {
 		this.send("PART " + channel + " :" + reason + "\r\n", session);
 	}
 	
+	/**
+	 * Instructs the bot to quit.
+	 */
 	public void quit() {
 		this.send("QUIT\r\n");
 	}
 	
+	/**
+	 * Instructs the bot to quit.
+	 * 
+	 * @param session the session to quit from
+	 */
 	public void quit(Channel session) {
 		this.send("QUIT\r\n", session);
 	}
 	
+	/**
+	 * Instructs the bot to quit with a reason.
+	 * 
+	 * @param reason the reason for quitting
+	 */
 	public void quit(String reason) {
 		this.send("QUIT :" + reason + "\r\n");
 	}
 
+	/**
+	 * Instructs the bot to quit with a reason.
+	 * 
+	 * @param reason the reason for quitting
+	 * @param session the session to quit from
+	 */
 	public void quit(String reason, Channel session) {
 		this.send("QUIT :" + reason + "\r\n", session);
 	}
 	
+	/**
+	 * Instructs the bot to send a message to the specified channel.
+	 * 
+	 * @param message the message to send
+	 * @param channel the channel to send to
+	 */
 	public void say(String message, String channel) {
 		this.send("PRIVMSG " + channel + " :" + message + "\r\n");
 	}
 	
+	/**
+	 * Instructs the bot to send a message to the specified channel.
+	 * 
+	 * @param message the message to send
+	 * @param channel the channel to send to
+	 * @param session the session to send on
+	 */
 	public void say(String message, String channel, Channel session) {
 		this.send("PRIVMSG " + channel + " :" + message + "\r\n", session);
 	}
 	
+	/**
+	 * Instructs the bot to send a message in /me form to the specified channel.
+	 * 
+	 * @param message the message to send
+	 * @param channel the channel to send to
+	 */
 	public void sayMe(String message, String channel) {
 		this.send("PRIVMSG " + channel + " :\u0001ACTION " + message + "\r\n");
 	}
 	
+	/**
+	 * Instructs the bot to send a message in /me form to the specified channel.
+	 * 
+	 * @param message the message to send
+	 * @param channel the channel to send to
+	 * @param session the channel to send on
+	 */
 	public void sayMe(String message, String channel, Channel session) {
 		this.send("PRIVMSG " + channel + " :\u0001ACTION " + message + "\r\n", session);
 	}

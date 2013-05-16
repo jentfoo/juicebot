@@ -39,14 +39,32 @@ public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<St
 	private boolean connected = false;
 	protected final Client client;
 
+	/**
+	 * Creates a <code>ClientHandlerAdapter</code> with auto-ping.
+	 * 
+	 * @param client the client to handle
+	 */
 	public ClientHandlerAdapter(Client client) {
 		this(client, JuiceBotDefaults.VERBOSE_BY_DEFAULT, true);
 	}
 
+	/**
+	 * Creates a <code>ClientHandlerAdapter</code> with auto-ping.
+	 * 
+	 * @param client the client to handle
+	 * @param verbose whether or not to be verbose
+	 */
 	public ClientHandlerAdapter(Client client, boolean verbose) {
 		this(client, verbose, true);
 	}
 
+	/**
+	 * Creates a <code>ClientHandlerAdapter</code>.
+	 * 
+	 * @param client the client to handle
+	 * @param verbose whether or not to be verbose
+	 * @param autoPing whether or not to automatically handle pings
+	 */
 	public ClientHandlerAdapter(Client client, boolean verbose, boolean autoPing) {
 		this.client = client;
 		this.verbose = verbose;
@@ -57,7 +75,7 @@ public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<St
 	public void messageReceived(ChannelHandlerContext ctx, String message) throws Exception {
 		if (!connected) {
 			connected = true;
-			this.client.connected(ctx.channel().remoteAddress());
+			this.client.connected(ctx.channel());
 		}
 		for (String command : message.split("\r\n")) {
 			if (verbose)

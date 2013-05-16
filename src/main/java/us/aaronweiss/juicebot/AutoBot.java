@@ -21,24 +21,47 @@
 package us.aaronweiss.juicebot;
 
 /**
+ * A basic bot that auto-rejoins upon being kicked, and attempts to avert poor bans.
+ * n.b. You must call super.receive(...) when you extend it in order to receive desired functionality.
  * 
- * @author Aaron
+ * @author Aaron Weiss
  * @version 2.0
  * @since 1.0
  */
 public abstract class AutoBot extends Bot {
+	/**
+	 * Creates a message-based <code>AutoBot</code> with the desired name.
+	 * 
+	 * @param username the desired username
+	 */
 	public AutoBot(String username) {
 		super(username);
 	}
 	
+	/**
+	 * Creates a simple or message <code>AutoBot</code> with the desired name.
+	 * 
+	 * @param username the desired username
+	 * @param simple whether or not to use the simple messaging API
+	 */
 	public AutoBot(String username, boolean simple) {
 		super(username, simple);
 	}
-	
+
+	/**
+	 * Creates a simple or message <code>AutoBot</code> with the desired name over SSL.
+	 * 
+	 * @param username the desired username
+	 * @param simple whether or not to use the simple messaging API
+	 * @param useSSL whether or not to use SSL
+	 */
 	public AutoBot(String username, boolean simple,  boolean useSSL) {
 		super(username, simple, useSSL);
 	}
 	
+	/**
+	 * Instructs the bot to join all of its home channels.
+	 */
 	public abstract void joinAll();
 	
 	@Override
