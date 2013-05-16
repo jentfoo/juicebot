@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Aaron Weiss <aaronweiss74@gmail.com>
+ * Copyright (C) 2013 Aaron Weiss <aaronweiss74@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -20,51 +20,29 @@
  */
 package us.aaronweiss.juicebot;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-/**
- * A basic bootstrap for starting a bot.
- * 
- * @author Aaron Weiss
- * @version 1.0
- * @since 1.0
- */
-public class BotBootstrap {
-	private ScheduledExecutorService scheduler;
-	private IBot bot;
-
-	/**
-	 * Creates a bootstrapper for a <code>IBot</code>.
-	 * @param bot the bot to bootstrap
-	 */
-	public BotBootstrap(IBot bot) {
-		this.bot = bot;
-		this.scheduler = Executors.newSingleThreadScheduledExecutor();
+public abstract class ManagedBot extends AutoBot {
+	protected String owner;
+	
+	public ManagedBot(String username, String owner) {
+		super(username);
+		this.owner = owner;
 	}
-
-	/**
-	 * Runs the bootstrapped bot.
-	 */
-	public void run() {
-		bot.connect();
-		if (Integer.parseInt(bot.getConfiguration().get("BOT_PERIODIC")) > 0) {
-			Runnable command = new Runnable()
-			{
-				public void run() {
-					bot.periodic();
-				}
-			};
-			scheduler.scheduleWithFixedDelay(command, 0, Integer.parseInt(bot.getConfiguration().get("BOT_PERIODIC")), TimeUnit.MILLISECONDS);
-		}
+	
+	public ManagedBot(String username, String owner, boolean useSSL) {
+		super(username, useSSL);
+		this.owner = owner;
 	}
-
-	/**
-	 * Shuts down the boostrapped bot.
-	 */
-	public void shutdown() {
-		scheduler.shutdown();
-		bot.disconnect();
+	
+	@Override
+	public void receive(Message message) {
+		boolean skipUser = false;
+		if (message.source().startsWith(owner))
+			skipUser = this.receivedAdmin(message);
+		if (!skipUser)
+			this.receivedUser(message);
+		super.receive(message);
 	}
+	
+	public abstract boolean receivedAdmin(Message message);
+	public abstract void receivedUser(Message message);
 }

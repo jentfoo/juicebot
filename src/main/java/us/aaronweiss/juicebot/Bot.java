@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Aaron Weiss <aaronweiss74@gmail.com>
+ * Copyright (C) 2013 Aaron Weiss <aaronweiss74@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -26,6 +26,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.oio.OioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
@@ -35,28 +37,44 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.util.CharsetUtil;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
-import us.aaronweiss.juicebot.net.BotHandler;
+import us.aaronweiss.juicebot.internal.InternalUtilities;
+import us.aaronweiss.juicebot.net.ClientHandlerAdapter;
 
 /**
- * The abstract base for all bots, as it handles network bootstrapping.
+ * 
+ * 
  * @author Aaron Weiss
- * @version 1.3
+ * @version 2.0
  * @since 1.0
  */
-public abstract class Bot implements IBot {
+public abstract class Bot implements Client {
+	protected static ScheduledExecutorService executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+	protected final ChannelGroup sessions = new DefaultChannelGroup("sessions");
+	protected TimeUnit timeUnit = TimeUnit.SECONDS;
 	protected final Bootstrap bootstrap;
-	protected final Configuration config;
-	protected Channel session;
-
-	public Bot(String username, String server, String port) {
-		this(username, server, port, false);
+	protected int periodicTime = -1;
+	private final boolean simple;
+	private String username;
+	
+	public Bot(String username) {
+		this(username, false);
+	}
+		
+	public Bot(String username, boolean simple) {
+		this(username, simple, false);
 	}
 	
-	public Bot(String username, String server, String port, final boolean useSSL) {
+	public Bot(String username, boolean simple, final boolean useSSL) {
+		this.username = username;
+		this.simple = simple;
 		bootstrap = new Bootstrap();
 		bootstrap.group(new OioEventLoopGroup());
 		bootstrap.channel(OioSocketChannel.class);
@@ -80,62 +98,232 @@ public abstract class Bot implements IBot {
 				pipeline.addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8));
 
 				// Handlers
-				pipeline.addLast("botHandler", new BotHandler(Bot.this));
+				pipeline.addLast("botHandler", new ClientHandlerAdapter(Bot.this));
 			}
 		});
 		bootstrap.option(ChannelOption.TCP_NODELAY, true);
-		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-		config = new Configuration(username, server, port);
-		config.put("BOT_PERIODIC", "-1");
-	}
-
-	public void onMessage(String[] message) {
-		if (this.isReadyMessage(message)) {
-			this.onReady();
-		}
 	}
 	
-	public void onConnect() {
-		BotUtils.register(this);
+	@Override
+	public Channel connect(String address) {
+		if (address.contains("[") || address.contains("]")) {
+			if (address.lastIndexOf(":") > address.indexOf("]")) {
+				return this.connect(address.substring(0, address.lastIndexOf(":")), address.substring(address.lastIndexOf(":")));
+			} else {
+				return this.connect(address, "6667");
+			}
+		} else if (address.contains(":")) {
+			if (address.indexOf(":") == address.lastIndexOf(":")) {
+				String[] adr = address.split(":");
+				return this.connect(adr[0], adr[1]);
+			} else {
+				return this.connect(address, "6667");
+			}
+		} else {
+			return this.connect(address, "6667");
+		}
 	}
 
-	public void onDisconnect() {
-		this.session = null;
+	@Override
+	public Channel connect(String address, String port) {
+		return this.connect(new InetSocketAddress(address, Integer.parseInt(port)));
+	}
+	
+	@Override
+	public Channel connect(SocketAddress address) {
+		final ChannelFuture cf = this.bootstrap.connect(address);
+		sessions.add(cf.channel());
+		if (periodicTime > 0) {
+			// this could be simplified with lambda expressions... (cmd = this::periodic(cf.channel())
+			Runnable cmd = new Runnable() {
+				@Override
+				public void run() {
+					periodic(cf.channel());
+				}
+			};
+			executor.scheduleAtFixedRate(cmd, periodicTime, periodicTime, timeUnit);
+		}
+		return cf.channel();
 	}
 
-	public void periodic() {
-		BotUtils.output("BOT_PERIODIC is set without overriding default Bot.periodic()");
+	@Override
+	public void disconnect(Channel session) {
+		session.close();
+	}
+	
+	@Override
+	public void connected(SocketAddress address) {
+		this.setUsername(username);
+	}
+	
+	@Override
+	public void periodic(Channel session) {
+		InternalUtilities.println("Default periodic() method is being run (every " + periodicTime + " " + timeUnit.toString() + ").");
 	}
 
-	public void connect() {
-		BotUtils.output("Connecting to " + config.get("IRC_SERVER") + ":" + config.get("IRC_PORT"));
-		ChannelFuture cf = this.bootstrap.connect(new InetSocketAddress(config.get("IRC_SERVER"), Integer.parseInt(config.get("IRC_PORT"))));
-		cf.syncUninterruptibly();
-		this.session = cf.channel();
+	@Override
+	public void disconnected(Channel session) {
+		// Do nothing by default.
 	}
 
-	public void write(String message) {
-		this.session.write(message);
-	}
-
-	public void disconnect() {
-		ChannelFuture cf = this.session.disconnect();
-		cf.syncUninterruptibly();
-		this.session = null;
-	}
-
+	@Override
 	public boolean isConnected() {
-		return this.session.isActive();
+		return !this.sessions.isEmpty();
 	}
 
-	protected boolean isReadyMessage(String[] message) {
-		return message[1].equals("MODE") &&
-				message[0].equals(":" + this.getConfiguration().get("BOT_NAME")) &&
-				message[2].equals(this.getConfiguration().get("BOT_NAME"));
+	@Override
+	public boolean isSimpleMessageReceiver() {
+		return this.simple;
 	}
 
-	public Configuration getConfiguration() {
-		return config;
+	@Override
+	public void send(String message) {
+		if (!message.endsWith("\r\n"))
+			message += "\r\n";
+		this.sessions.write(message);
+	}
+	
+	@Override
+	public void send(String message, Channel session) {
+		if (!this.sessions.contains(session))
+			throw new IllegalArgumentException("Not connected to specified session.");
+		if (!message.endsWith("\r\n"))
+			message += "\r\n";
+		session.write(message);
+	}
+	
+	@Override
+	public void send(String[] message) {
+		this.send(Bot.join(" ", message));
+	}
+	
+	@Override
+	public void send(String[] message, Channel session) {
+		this.send(Bot.join(" ", message), session);
 	}
 
+	@Override
+	public void receive(String message, Channel session) {
+		this.receive(message.split(" "), session);
+	}
+
+	@Override
+	public void receive(String[] message, Channel session) {
+		this.receive(new Message(message, this, session));
+	}
+
+	@Override
+	public void receive(Message message) {
+		this.receive(message.toString(), message.session());
+	}
+	
+	protected String username() {
+		return this.username;
+	}
+	
+	protected void setUsername(String username) {
+		this.username = username;
+		this.send("NICK :" + username + "\r\n");
+		this.send("USER " + username + " 0 * :" + username + "\r\n");
+	}
+	
+	// Common IRC Operations
+	public void join(String channel) {
+		this.send("JOIN " + channel + "\r\n");
+	}
+	
+	public void join(String channel, Channel session) {
+		this.send("JOIN " + channel + "\r\n", session);
+	}
+	
+	public void part(String channel) {
+		this.send("PART " + channel + "\r\n");
+	}	
+	
+	public void part(String channel, Channel session) {
+		this.send("PART " + channel + "\r\n", session);
+	}
+	
+	public void part(String channel, String reason) {
+		this.send("PART " + channel + " :" + reason + "\r\n");
+	}
+	
+	public void part(String channel, String reason, Channel session) {
+		this.send("PART " + channel + " :" + reason + "\r\n", session);
+	}
+	
+	public void quit() {
+		this.send("QUIT\r\n");
+	}
+	
+	public void quit(Channel session) {
+		this.send("QUIT\r\n", session);
+	}
+	
+	public void quit(String reason) {
+		this.send("QUIT :" + reason + "\r\n");
+	}
+
+	public void quit(String reason, Channel session) {
+		this.send("QUIT :" + reason + "\r\n", session);
+	}
+	
+	public void say(String message, String channel) {
+		this.send("PRIVMSG " + channel + " :" + message + "\r\n");
+	}
+	
+	public void say(String message, String channel, Channel session) {
+		this.send("PRIVMSG " + channel + " :" + message + "\r\n", session);
+	}
+	
+	public void sayMe(String message, String channel) {
+		this.send("PRIVMSG " + channel + " :\u0001ACTION " + message + "\r\n");
+	}
+	
+	public void sayMe(String message, String channel, Channel session) {
+		this.send("PRIVMSG " + channel + " :\u0001ACTION " + message + "\r\n", session);
+	}
+	
+	// Static Bot utilities
+	
+	/**
+	 * Finds a string within another string ignoring case.
+	 * @param needle the string to find
+	 * @param haystack the string to search in
+	 * @return whether or not the string was found
+	 */
+	public static boolean containsIgnoreCase(String needle, String haystack) {
+		if (needle == null || haystack == null)
+			return false;
+		return haystack.matches("(?i)(.*)" + needle + "(.*)");
+	}
+
+	/**
+	 * Joins a string from an array.
+	 * @param joinString the string to use for joining
+	 * @param message the array to use
+	 * @return the joined string
+	 */
+	public static String join(String joinString, String[] message) {
+		return joinFromIndex(joinString, 0, message);
+	}
+	
+	/**
+	 * Joins a string in an array starting at the specified index.
+	 * @param joinString the string to use for joining
+	 * @param index the index to start at
+	 * @param message the array to use
+	 * @return the string joined from the specified index
+	 */
+	public static String joinFromIndex(String joinString, int index, String[] message) {
+		try {
+			StringBuilder sb = new StringBuilder();
+			for (int i = index; i < message.length; i++) {
+				sb.append(message[i]).append(joinString);
+			}
+			return sb.substring(0, sb.lastIndexOf(joinString));
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
 }

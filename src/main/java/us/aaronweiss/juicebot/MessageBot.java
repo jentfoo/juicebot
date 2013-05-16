@@ -18,56 +18,24 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package us.aaronweiss.juicebot.examples;
+package us.aaronweiss.juicebot;
 
 import io.netty.channel.Channel;
 
-import java.util.Scanner;
-
-import us.aaronweiss.juicebot.Bot;
-import us.aaronweiss.juicebot.SimpleBot;
-
-public class JuiceBot extends SimpleBot {
-	public JuiceBot() {
-		super("JuiceBot");
-	}
-	
-	public JuiceBot(boolean useSSL) {
-		super("JuiceBot", useSSL);
+public abstract class MessageBot extends Bot {
+	public MessageBot(String username) {
+		super(username, false);
 	}
 
-	public void joinAll() {
-		this.join("#vana");
+	public MessageBot(String username, boolean useSSL) {
+		super(username, false, useSSL);
 	}
 	
 	@Override
 	public void receive(String[] message, Channel session) {
-		if (message[0].endsWith(username()) && message[1].equals("MODE") && message[2].equals(username()))
-			this.joinAll();
-		boolean gas = false, jews = false;
-		for (String token : message) {
-			if (token.equalsIgnoreCase("gas") || token.equalsIgnoreCase(":gas"))
-				gas = true;
-			else if (token.equalsIgnoreCase("jews") || token.equalsIgnoreCase("joos"))
-				jews = true;
-		}
-		if (gas || jews)
-			this.say("No, I said pass the juice!", message[2], session);
+		throw new IllegalArgumentException("MessageBots don't support the simple messaging API.");
 	}
-	
-	public static void main(String[] args) {
-		// String server = args[0];
-		String server = "irc.fyrechat.net:6667";
-		Bot bot = new JuiceBot();
-		Channel session = bot.connect(server);
-		Scanner input = new Scanner(System.in);
-		while (true) {
-			String cmd = input.nextLine();
-			if (cmd.equalsIgnoreCase("quit") || cmd.equalsIgnoreCase("exit") || cmd.equalsIgnoreCase("shutdown")) {
-				bot.disconnect(session);
-				break;
-			}
-		}
-		input.close();
-	}
+
+	@Override
+	public abstract void receive(Message message);
 }

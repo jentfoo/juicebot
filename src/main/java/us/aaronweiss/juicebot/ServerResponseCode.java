@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Aaron Weiss <aaronweiss74@gmail.com>
+ * Copyright (C) 2013 Aaron Weiss <aaronweiss74@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -156,5 +156,9 @@ public enum ServerResponseCode {
 	 */
 	private ServerResponseCode(int value) {
 		this.value = value;
+	}
+	
+	public String toString() {
+		return Integer.toString(value);
 	}
 }

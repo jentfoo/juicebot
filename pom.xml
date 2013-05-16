@@ -2,9 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>juicebot</groupId>
     <artifactId>juicebot</artifactId>
-    <version>1.1.0</version>
+    <version>2.0.0</version>
     <name>juicebot</name>
-    <description>A simple, and fast Java library for creating IRC bots.</description>
+    <description>A simple and fast Java library for creating IRC bots.</description>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

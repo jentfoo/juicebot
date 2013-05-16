@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Aaron Weiss <aaronweiss74@gmail.com>
+ * Copyright (C) 2013 Aaron Weiss <aaronweiss74@gmail.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"), 
@@ -20,26 +20,47 @@
  */
 package us.aaronweiss.juicebot;
 
-import java.util.HashMap;
+import java.net.SocketAddress;
+
+import io.netty.channel.Channel;
+import io.netty.util.AttributeKey;
 
 /**
- * A bot configuration map.
+ * 
  * @author Aaron Weiss
- * @version 2.0
- * @since 1.0
+ * @version 1.0
+ * @since 2.0
  */
-public class Configuration extends HashMap<String, String> {
-	private static final long serialVersionUID = 2474723275535946706L;
+public abstract class DataAwareBot extends Bot {
+	protected static final AttributeKey<SessionData> sessionData = new AttributeKey<SessionData>("session-data");
+	
+	public DataAwareBot(String username) {
+		super(username);
+	}
+	
+	public DataAwareBot(String username, boolean simple) {
+		super(username, simple);
+	}
+	
+	public DataAwareBot(String username, boolean simple,  boolean useSSL) {
+		super(username, simple, useSSL);
+	}
+	
+	@Override
+	public Channel connect(SocketAddress address) {
+		Channel ch = super.connect(address);
+		ch.attr(sessionData).set(new SessionData());
+		return ch;
+	}
+	
+	public abstract void joinAll();
 
-	/**
-	 * Creates a basic configuration map with some initial data.
-	 * @param username the username of the bot
-	 * @param server the server for the bot to connect to
-	 * @param port the port for the bot to connect to
-	 */
-	public Configuration(String username, String server, String port) {
-		this.put("BOT_NAME", username);
-		this.put("IRC_SERVER", server);
-		this.put("IRC_PORT", port);
+	@Override
+	public void receive(Message message) {
+		if (message.toString().startsWith(":" + username() + " MODE " + username())) {
+			this.joinAll();
+		}
+		if (message != null)
+			message.session().attr(DataAwareBot.sessionData).get().receive(message);
 	}
 }

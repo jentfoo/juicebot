@@ -18,41 +18,8 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package us.aaronweiss.juicebot;
+package us.aaronweiss.juicebot.internal;
 
-/**
- * 
- * @author Aaron
- * @version 2.0
- * @since 1.0
- */
-public abstract class AutoBot extends Bot {
-	public AutoBot(String username) {
-		super(username);
-	}
-	
-	public AutoBot(String username, boolean simple) {
-		super(username, simple);
-	}
-	
-	public AutoBot(String username, boolean simple,  boolean useSSL) {
-		super(username, simple, useSSL);
-	}
-	
-	public abstract void joinAll();
-	
-	@Override
-	public void receive(Message message) {
-		if (message.type().equals("KICK") && message.message().contains(username())) {
-			this.send("JOIN " + message.channel() + "\r\n");
-		} else if (message.type().equals(ServerResponseCode.ERR_BANNEDFROMCHAN.value)) {
-			this.setUsername(username() + "_");
-		} else if (message.type().equals(ServerResponseCode.ERR_CANNOTSENDTOCHAN.value)) {
-			this.part(message.channel());
-			this.setUsername(username() + "_");
-			this.join(message.channel());
-		} else if (message.toString().startsWith(":" + username() + " MODE " + username())) {
-			this.joinAll();
-		}
-	}
+public class JuiceBotDefaults {
+	public static boolean VERBOSE_BY_DEFAULT = true;
 }

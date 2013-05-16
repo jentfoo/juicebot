@@ -25,40 +25,42 @@ import io.netty.channel.Channel;
 import java.util.Scanner;
 
 import us.aaronweiss.juicebot.Bot;
-import us.aaronweiss.juicebot.SimpleBot;
+import us.aaronweiss.juicebot.ManagedBot;
+import us.aaronweiss.juicebot.Message;
 
-public class JuiceBot extends SimpleBot {
-	public JuiceBot() {
-		super("JuiceBot");
-	}
-	
-	public JuiceBot(boolean useSSL) {
-		super("JuiceBot", useSSL);
+public class Sweet extends ManagedBot {
+	public Sweet(String owner) {
+		super("Sweet", owner);
 	}
 
+	@Override
 	public void joinAll() {
 		this.join("#vana");
 	}
 	
 	@Override
-	public void receive(String[] message, Channel session) {
-		if (message[0].endsWith(username()) && message[1].equals("MODE") && message[2].equals(username()))
-			this.joinAll();
-		boolean gas = false, jews = false;
-		for (String token : message) {
-			if (token.equalsIgnoreCase("gas") || token.equalsIgnoreCase(":gas"))
-				gas = true;
-			else if (token.equalsIgnoreCase("jews") || token.equalsIgnoreCase("joos"))
-				jews = true;
+	public boolean receivedAdmin(Message message) {
+		boolean received = false;
+		if (message.message().contains(username())) {
+			if (Bot.containsIgnoreCase("quit", message.message()) || Bot.containsIgnoreCase("bye", message.message())) {
+				this.quit(owner + " said so.");
+				received = true;
+			}
 		}
-		if (gas || jews)
-			this.say("No, I said pass the juice!", message[2], session);
+		return received;
 	}
-	
+
+	@Override
+	public void receivedUser(Message message) {
+		if (Bot.containsIgnoreCase("say you're happy now", message.message())) {
+			message.reply("Once more, with feeling!");
+		}
+	}
+
 	public static void main(String[] args) {
 		// String server = args[0];
 		String server = "irc.fyrechat.net:6667";
-		Bot bot = new JuiceBot();
+		Bot bot = new Sweet("aaronweiss74");
 		Channel session = bot.connect(server);
 		Scanner input = new Scanner(System.in);
 		while (true) {

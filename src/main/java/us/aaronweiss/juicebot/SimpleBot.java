@@ -20,39 +20,31 @@
  */
 package us.aaronweiss.juicebot;
 
+import io.netty.channel.Channel;
+
+
 /**
  * 
- * @author Aaron
- * @version 2.0
- * @since 1.0
+ * 
+ * @author Aaron Weiss
+ * @version 1.0
+ * @since 2.0
  */
-public abstract class AutoBot extends Bot {
-	public AutoBot(String username) {
-		super(username);
+public abstract class SimpleBot extends Bot {
+	public SimpleBot(String username) {
+		super(username, true);
 	}
-	
-	public AutoBot(String username, boolean simple) {
-		super(username, simple);
+
+	public SimpleBot(String username, boolean useSSL) {
+		super(username, true, useSSL);
 	}
-	
-	public AutoBot(String username, boolean simple,  boolean useSSL) {
-		super(username, simple, useSSL);
-	}
-	
-	public abstract void joinAll();
 	
 	@Override
+	public abstract void receive(String[] message, Channel session);
+
+	@Override
 	public void receive(Message message) {
-		if (message.type().equals("KICK") && message.message().contains(username())) {
-			this.send("JOIN " + message.channel() + "\r\n");
-		} else if (message.type().equals(ServerResponseCode.ERR_BANNEDFROMCHAN.value)) {
-			this.setUsername(username() + "_");
-		} else if (message.type().equals(ServerResponseCode.ERR_CANNOTSENDTOCHAN.value)) {
-			this.part(message.channel());
-			this.setUsername(username() + "_");
-			this.join(message.channel());
-		} else if (message.toString().startsWith(":" + username() + " MODE " + username())) {
-			this.joinAll();
-		}
+		throw new IllegalArgumentException("SimpleBots don't support Message objects.");
 	}
+
 }

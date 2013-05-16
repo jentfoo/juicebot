@@ -20,39 +20,36 @@
  */
 package us.aaronweiss.juicebot;
 
+import io.netty.channel.Channel;
+
+import java.net.SocketAddress;
+
 /**
+ * A basic abstraction for all IRC clients.
  * 
- * @author Aaron
+ * @author Aaron Weiss
  * @version 2.0
  * @since 1.0
  */
-public abstract class AutoBot extends Bot {
-	public AutoBot(String username) {
-		super(username);
-	}
+public interface Client {
+	public Channel connect(String address);
+	public Channel connect(String address, String port);
+	public Channel connect(SocketAddress address);
+	public void disconnect(Channel session);
 	
-	public AutoBot(String username, boolean simple) {
-		super(username, simple);
-	}
+	public void connected(SocketAddress address);
+	public void periodic(Channel session);
+	public void disconnected(Channel session);
 	
-	public AutoBot(String username, boolean simple,  boolean useSSL) {
-		super(username, simple, useSSL);
-	}
+	public boolean isConnected();
+	public boolean isSimpleMessageReceiver();
 	
-	public abstract void joinAll();
+	public void send(String message);
+	public void send(String message, Channel session);
+	public void send(String[] message);
+	public void send(String[] message, Channel session);
 	
-	@Override
-	public void receive(Message message) {
-		if (message.type().equals("KICK") && message.message().contains(username())) {
-			this.send("JOIN " + message.channel() + "\r\n");
-		} else if (message.type().equals(ServerResponseCode.ERR_BANNEDFROMCHAN.value)) {
-			this.setUsername(username() + "_");
-		} else if (message.type().equals(ServerResponseCode.ERR_CANNOTSENDTOCHAN.value)) {
-			this.part(message.channel());
-			this.setUsername(username() + "_");
-			this.join(message.channel());
-		} else if (message.toString().startsWith(":" + username() + " MODE " + username())) {
-			this.joinAll();
-		}
-	}
+	public void receive(String message, Channel session);
+	public void receive(String[] message, Channel session);
+	public void receive(Message message);
 }

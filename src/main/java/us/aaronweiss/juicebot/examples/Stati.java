@@ -25,40 +25,53 @@ import io.netty.channel.Channel;
 import java.util.Scanner;
 
 import us.aaronweiss.juicebot.Bot;
-import us.aaronweiss.juicebot.SimpleBot;
+import us.aaronweiss.juicebot.DataAwareBot;
+import us.aaronweiss.juicebot.Message;
+import us.aaronweiss.juicebot.SessionData;
 
-public class JuiceBot extends SimpleBot {
-	public JuiceBot() {
-		super("JuiceBot");
+public class Stati extends DataAwareBot {
+
+	public Stati() {
+		super("Stati", false);
 	}
 	
-	public JuiceBot(boolean useSSL) {
-		super("JuiceBot", useSSL);
+	public Stati(boolean useSSL) {
+		super("Stati", false, useSSL);
 	}
 
+	@Override
 	public void joinAll() {
 		this.join("#vana");
 	}
 	
 	@Override
-	public void receive(String[] message, Channel session) {
-		if (message[0].endsWith(username()) && message[1].equals("MODE") && message[2].equals(username()))
-			this.joinAll();
-		boolean gas = false, jews = false;
-		for (String token : message) {
-			if (token.equalsIgnoreCase("gas") || token.equalsIgnoreCase(":gas"))
-				gas = true;
-			else if (token.equalsIgnoreCase("jews") || token.equalsIgnoreCase("joos"))
-				jews = true;
+	public void receive(Message message) {
+		SessionData sdo = message.session().attr(DataAwareBot.sessionData).get();
+		if (message.type().equals("PRIVMSG") && message.message().contains(username())) {
+			if (Bot.containsIgnoreCase("users", message.message())) {
+				message.replyDirect("Channel Users: " + sdo.server.channels.get(message.channel()).userCount());
+				message.replyDirect("Server Users: " + sdo.server.online());
+			} else if (Bot.containsIgnoreCase("opers", message.message())) {
+				message.replyDirect("Channel Opers: " + sdo.server.channels.get(message.channel()).operCount());
+			} else if (Bot.containsIgnoreCase("topic", message.message())) {
+				String topic = sdo.server.channels.get(message.channel()).topic();
+				message.replyDirect("Topic: " + ((topic == null) ? "None set." : topic));
+			} else if (Bot.containsIgnoreCase("join", message.message())) {
+				for (String token : message.splitMessage()) {
+					if (token.startsWith("#"))
+						this.join(token);
+				}
+				message.replyDirect("Done.");
+			}
+		} else {
+			super.receive(message);
 		}
-		if (gas || jews)
-			this.say("No, I said pass the juice!", message[2], session);
 	}
-	
+
 	public static void main(String[] args) {
 		// String server = args[0];
 		String server = "irc.fyrechat.net:6667";
-		Bot bot = new JuiceBot();
+		Bot bot = new Stati();
 		Channel session = bot.connect(server);
 		Scanner input = new Scanner(System.in);
 		while (true) {
