@@ -64,7 +64,8 @@ public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<St
 				InternalUtilities.println(command);
 			if (autoPing && command.contains("PING") && command.indexOf("PING") < command.indexOf(':', 1) && !command.contains("supported")) {
 				String pong = command.replaceFirst("PING", "PONG").substring(command.indexOf("PING"));
-				InternalUtilities.println(pong);
+				if (verbose)
+					InternalUtilities.println(pong);
 				this.client.send(pong);
 			} else if (this.client.isSimpleMessageReceiver()) {
 				this.client.receive(command, ctx.channel());

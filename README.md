@@ -78,7 +78,7 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 	}
 	
 ### Need more examples? ###
-Just check out the Examples included in the source code! There's an improved version of the bot in Example3 named Sweet, made in honor of the demon from Buffy the Vampire Slayer's "Once More With Feeling." There's also a basic statistics bot named Stati that can provide you mostly useless information as a demonstration of the new work-in-progress information API. Of course, there's also a new version of the classic "pass the juice" JuiceBot from which the library got its name.
+Just check out the Examples included in the source code! There's an improved version of the bot in Example3 named Sweet, made in honor of the demon from Buffy the Vampire Slayer's "Once More With Feeling." There's also a basic statistics bot named Stati (STAT-EE) that can provide you mostly useless information as a demonstration of the new work-in-progress information API. Of course, there's also a new version of the classic "pass the juice" JuiceBot from which the library got its name. There's also a bot named MetalGear that should demonstrate how to properly keep your bot silent on the client-side.
 
 ### Acknowledgements ###
 * [angelsl](http://www.github.com/angelsl) for helping with the IRC protocol stuff.
