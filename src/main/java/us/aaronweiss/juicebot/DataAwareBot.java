@@ -38,33 +38,41 @@ public abstract class DataAwareBot extends Bot {
 	/**
 	 * Creates a message-based <code>DataAwareBot</code> with the desired name.
 	 * 
-	 * @param username the desired username
+	 * @param username
+	 *            the desired username
 	 */
 	public DataAwareBot(String username) {
 		super(username);
 	}
 
 	/**
-	 * Creates a simple or message <code>DataAwareBot</code> with the desired name.
+	 * Creates a simple or message <code>DataAwareBot</code> with the desired
+	 * name.
 	 * 
-	 * @param username the desired username
-	 * @param simple whether or not to use the simple messaging API
+	 * @param username
+	 *            the desired username
+	 * @param simple
+	 *            whether or not to use the simple messaging API
 	 */
 	public DataAwareBot(String username, boolean simple) {
 		super(username, simple);
 	}
 
 	/**
-	 * Creates a simple or message <code>DataAwareBot</code> with the desired name over SSL.
+	 * Creates a simple or message <code>DataAwareBot</code> with the desired
+	 * name over SSL.
 	 * 
-	 * @param username the desired username
-	 * @param simple whether or not to use the simple messaging API
-	 * @param useSSL whether or not to use SSL
+	 * @param username
+	 *            the desired username
+	 * @param simple
+	 *            whether or not to use the simple messaging API
+	 * @param useSSL
+	 *            whether or not to use SSL
 	 */
-	public DataAwareBot(String username, boolean simple,  boolean useSSL) {
+	public DataAwareBot(String username, boolean simple, boolean useSSL) {
 		super(username, simple, useSSL);
 	}
-	
+
 	@Override
 	public Channel connect(SocketAddress address) {
 		Channel ch = super.connect(address);

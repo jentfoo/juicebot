@@ -30,8 +30,8 @@ import us.aaronweiss.juicebot.Message;
 import us.aaronweiss.juicebot.SessionData;
 
 /**
- * A simple, next-to-useless statistics bot.
- * <code>Stati</code> serves as a light demonstration of the information API.
+ * A simple, next-to-useless statistics bot. <code>Stati</code> serves as a
+ * light demonstration of the information API.
  * 
  * @author Aaron Weiss
  * @version 1.0
@@ -48,7 +48,8 @@ public class Stati extends DataAwareBot {
 	/**
 	 * Creates <code>Stati</code> over SSL.
 	 * 
-	 * @param useSSL whether or not to use SSL
+	 * @param useSSL
+	 *            whether or not to use SSL
 	 */
 	public Stati(boolean useSSL) {
 		super("Stati", false, useSSL);
@@ -58,7 +59,7 @@ public class Stati extends DataAwareBot {
 	public void joinAll() {
 		this.join("#vana");
 	}
-	
+
 	@Override
 	public void receive(Message message) {
 		SessionData sdo = message.session().attr(DataAwareBot.sessionData).get();
@@ -86,7 +87,8 @@ public class Stati extends DataAwareBot {
 	/**
 	 * Runs this bot.
 	 * 
-	 * @param args the server to connect to
+	 * @param args
+	 *            the server to connect to
 	 */
 	public static void main(String[] args) {
 		String server = "irc.fyrechat.net:6667";

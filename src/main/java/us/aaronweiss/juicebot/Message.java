@@ -37,13 +37,16 @@ public class Message {
 	private final String messageType;
 	private String channel;
 	private String[] message;
-	
+
 	/**
 	 * Creates a new <code>Message</code>.
 	 * 
-	 * @param message the full message itself, split by spaces.
-	 * @param receiver the <code>Client</code> receiving the message
-	 * @param session the session the message was received from
+	 * @param message
+	 *            the full message itself, split by spaces.
+	 * @param receiver
+	 *            the <code>Client</code> receiving the message
+	 * @param session
+	 *            the session the message was received from
 	 */
 	public Message(String[] message, Client receiver, Channel session) {
 		this.fullMessage = Bot.join(" ", message);
@@ -64,7 +67,7 @@ public class Message {
 		this.receiver = receiver;
 		this.session = session;
 	}
-	
+
 	/**
 	 * Gets the source of the message
 	 * 
@@ -73,7 +76,7 @@ public class Message {
 	public String source() {
 		return this.source;
 	}
-	
+
 	/**
 	 * Gets the type of the message.
 	 * 
@@ -82,7 +85,7 @@ public class Message {
 	public String type() {
 		return this.messageType;
 	}
-	
+
 	/**
 	 * Gets the IRC Channel of the message.
 	 * 
@@ -91,27 +94,27 @@ public class Message {
 	public String channel() {
 		return this.channel;
 	}
-	
+
 	/**
-	 * Gets the complete last element (following the second colon) from the full message.
-	 * To get the full message, use toString().
+	 * Gets the complete last element (following the second colon) from the full
+	 * message. To get the full message, use toString().
 	 * 
 	 * @return the message portion of the message
 	 */
 	public String message() {
 		return (message != null) ? Bot.join(" ", message) : null;
 	}
-	
+
 	/**
-	 * Gets the message portion split by spaces.
-	 * To get the full message split by spaces, use toString().split(" ").
+	 * Gets the message portion split by spaces. To get the full message split
+	 * by spaces, use toString().split(" ").
 	 * 
 	 * @return the message portion of the message split by spaces
 	 */
 	public String[] splitMessage() {
 		return this.message;
 	}
-	
+
 	/**
 	 * Gets the <code>Client</code> receiving the message.
 	 * 
@@ -120,37 +123,39 @@ public class Message {
 	public Client receiver() {
 		return this.receiver;
 	}
-	
+
 	/**
 	 * Gets the session that the message is from.
-	 *
+	 * 
 	 * @return the message session
 	 */
 	public Channel session() {
 		return this.session;
 	}
-	
+
 	/**
 	 * Replys to this message on the same channel and session.
 	 * 
-	 * @param message the message to reply with
+	 * @param message
+	 *            the message to reply with
 	 */
 	public void reply(String message) {
 		if (!messageType.equals("PRIVMSG"))
 			throw new UnsupportedOperationException("Cannot reply to messages that are not PRIVMSGs.");
 		this.receiver.send("PRIVMSG " + channel + " :" + message + "\r\n", session);
 	}
-	
+
 	/**
-	 * Replys directly to the user who sent this message on the same channel and session.
-	 * Prepends the message with the username of the source.
+	 * Replys directly to the user who sent this message on the same channel and
+	 * session. Prepends the message with the username of the source.
 	 * 
-	 * @param message the message to reply with
+	 * @param message
+	 *            the message to reply with
 	 */
 	public void replyDirect(String message) {
 		this.reply(source.subSequence(0, source.indexOf("!")) + ": " + message);
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.fullMessage;

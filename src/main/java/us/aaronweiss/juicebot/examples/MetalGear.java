@@ -7,7 +7,8 @@ import us.aaronweiss.juicebot.internal.JuiceBotDefaults;
 
 /**
  * A bot that says "METAL GEAR" upon seeing its name, Snake.
- * <code>MetalGear</code> serves as a demonstration of <code>JuiceBotDefaults</code> and <code>AutoBot</code>s.
+ * <code>MetalGear</code> serves as a demonstration of
+ * <code>JuiceBotDefaults</code> and <code>AutoBot</code>s.
  * 
  * @author Aaron Weiss
  * @version 1.0
@@ -25,7 +26,7 @@ public class MetalGear extends AutoBot {
 	public void joinAll() {
 		this.join("#vana");
 	}
-	
+
 	@Override
 	public void receive(Message message) {
 		if (message.type().equals("PRIVMSG")) {
@@ -35,7 +36,7 @@ public class MetalGear extends AutoBot {
 			super.receive(message);
 		}
 	}
-	
+
 	/**
 	 * Creates a new slightly randomized "METAL GEAR" string.
 	 * 
@@ -49,10 +50,12 @@ public class MetalGear extends AutoBot {
 			sb.append("R");
 		return sb.toString();
 	}
+
 	/**
 	 * Runs this bot.
 	 * 
-	 * @param args the server to connect to
+	 * @param args
+	 *            the server to connect to
 	 */
 	public static void main(String[] args) {
 		JuiceBotDefaults.VERBOSE_BY_DEFAULT = false;

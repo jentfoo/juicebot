@@ -31,25 +31,42 @@ import java.util.TimeZone;
  * @since 2.0
  */
 public final class InternalUtilities {
+	/**
+	 * Prints the specified message to console with a timestamp.
+	 * 
+	 * @param message
+	 *            the message to print.
+	 */
 	public static void print(String message) {
 		print(message, false);
 	}
-	
+
+	/**
+	 * Prints the specified message to console with a timestamp with an included
+	 * newline.
+	 * 
+	 * @param message
+	 *            the message to print.
+	 */
 	public static void println(String message) {
-		print(message, true);	
+		print(message, true);
 	}
-	
+
 	/**
 	 * Outputs text to the console for a user to read.
-	 * @param message the text to output
-	 * @param newLine whether or not to end the message with a new line carriage
+	 * 
+	 * @param message
+	 *            the text to output
+	 * @param newLine
+	 *            whether or not to end the message with a new line carriage
 	 */
 	private static void print(String message, boolean newLine) {
 		System.out.print("[" + now() + "] " + message + ((newLine) ? "\n" : ""));
 	}
-	
+
 	/**
 	 * Gets a timestamp for the current moment in time.
+	 * 
 	 * @return a timestamp for this moment in time
 	 */
 	private static String now() {

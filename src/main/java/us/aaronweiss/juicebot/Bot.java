@@ -63,11 +63,12 @@ public abstract class Bot implements Client {
 	protected int periodicTime = -1;
 	private final boolean simple;
 	private String username;
-	
+
 	/**
 	 * Constructs a new <code>Bot</code>.
 	 * 
-	 * @param username the username of the bot
+	 * @param username
+	 *            the username of the bot
 	 */
 	public Bot(String username) {
 		this(username, false);
@@ -76,19 +77,24 @@ public abstract class Bot implements Client {
 	/**
 	 * Constructs a new <code>Bot</code>.
 	 * 
-	 * @param username the username of the bot
-	 * @param simple whether or not the bot should use the simple messaging API
+	 * @param username
+	 *            the username of the bot
+	 * @param simple
+	 *            whether or not the bot should use the simple messaging API
 	 */
 	public Bot(String username, boolean simple) {
 		this(username, simple, false);
 	}
-	
+
 	/**
 	 * Constructs a new <code>Bot</code>.
 	 * 
-	 * @param username the username of the bot
-	 * @param simple whether or not the bot should use the simple messaging API
-	 * @param useSSL whether or not the bot should use SSL
+	 * @param username
+	 *            the username of the bot
+	 * @param simple
+	 *            whether or not the bot should use the simple messaging API
+	 * @param useSSL
+	 *            whether or not the bot should use SSL
 	 */
 	public Bot(String username, boolean simple, final boolean useSSL) {
 		this.username = username;
@@ -100,14 +106,14 @@ public abstract class Bot implements Client {
 			@Override
 			protected void initChannel(OioSocketChannel ch) throws Exception {
 				ChannelPipeline pipeline = ch.pipeline();
-				
+
 				// SSL Support
 				if (useSSL) {
 					SSLEngine engine = SSLContext.getDefault().createSSLEngine();
 					engine.setUseClientMode(true);
 					pipeline.addLast("ssl", new SslHandler(engine));
 				}
-				
+
 				// Decoders
 				pipeline.addLast("frameDecoder", new LineBasedFrameDecoder(1000));
 				pipeline.addLast("stringDecoder", new StringDecoder(CharsetUtil.UTF_8));
@@ -121,7 +127,7 @@ public abstract class Bot implements Client {
 		});
 		bootstrap.option(ChannelOption.TCP_NODELAY, true);
 	}
-	
+
 	@Override
 	public Channel connect(String address) {
 		if (address.contains("[") || address.contains("]")) {
@@ -146,7 +152,7 @@ public abstract class Bot implements Client {
 	public Channel connect(String address, String port) {
 		return this.connect(new InetSocketAddress(address, Integer.parseInt(port)));
 	}
-	
+
 	@Override
 	public Channel connect(SocketAddress address) {
 		final ChannelFuture cf = this.bootstrap.connect(address);
@@ -168,12 +174,12 @@ public abstract class Bot implements Client {
 	public void disconnect(Channel session) {
 		session.close();
 	}
-	
+
 	@Override
 	public void connected(Channel session) {
 		this.setUsername(username);
 	}
-	
+
 	@Override
 	public void periodic(Channel session) {
 		InternalUtilities.println("Default periodic() method is being run (every " + periodicTime + " " + timeUnit.toString() + ").");
@@ -200,7 +206,7 @@ public abstract class Bot implements Client {
 			message += "\r\n";
 		this.sessions.write(message);
 	}
-	
+
 	@Override
 	public void send(String message, Channel session) {
 		if (!this.sessions.contains(session))
@@ -209,12 +215,12 @@ public abstract class Bot implements Client {
 			message += "\r\n";
 		session.write(message);
 	}
-	
+
 	@Override
 	public void send(String[] message) {
 		this.send(Bot.join(" ", message));
 	}
-	
+
 	@Override
 	public void send(String[] message, Channel session) {
 		this.send(Bot.join(" ", message), session);
@@ -234,7 +240,7 @@ public abstract class Bot implements Client {
 	public void receive(Message message) {
 		this.receive(message.toString(), message.session());
 	}
-	
+
 	/**
 	 * Gets the username of the bot.
 	 * 
@@ -243,23 +249,26 @@ public abstract class Bot implements Client {
 	protected String username() {
 		return this.username;
 	}
-	
+
 	/**
 	 * Sets the bot's username and sends re-registration commands.
 	 * 
-	 * @param username the desired new username
+	 * @param username
+	 *            the desired new username
 	 */
 	protected void setUsername(String username) {
 		this.username = username;
 		this.send("NICK :" + username + "\r\n");
 		this.send("USER " + username + " 0 * :" + username + "\r\n");
 	}
-	
+
 	// Common IRC Operations
-	
+
 	/**
 	 * Instructs the bot to join the specified channel.
-	 * @param channel the channel to join
+	 * 
+	 * @param channel
+	 *            the channel to join
 	 */
 	public void join(String channel) {
 		this.send("JOIN " + channel + "\r\n");
@@ -267,34 +276,45 @@ public abstract class Bot implements Client {
 
 	/**
 	 * Instructs the bot to join the specified channel.
-	 * @param channel the channel to join
-	 * @param session the session to join on
+	 * 
+	 * @param channel
+	 *            the channel to join
+	 * @param session
+	 *            the session to join on
 	 */
 	public void join(String channel, Channel session) {
 		this.send("JOIN " + channel + "\r\n", session);
 	}
-	
+
 	/**
 	 * Instructs the bot to part the specified channel.
-	 * @param channel the channel to part
+	 * 
+	 * @param channel
+	 *            the channel to part
 	 */
 	public void part(String channel) {
 		this.send("PART " + channel + "\r\n");
-	}	
-	
+	}
+
 	/**
 	 * Instructs the bot to part the specified channel.
-	 * @param channel the channel to part
-	 * @param session the session to part on
+	 * 
+	 * @param channel
+	 *            the channel to part
+	 * @param session
+	 *            the session to part on
 	 */
 	public void part(String channel, Channel session) {
 		this.send("PART " + channel + "\r\n", session);
 	}
-	
+
 	/**
 	 * Instructs the bot to part the specified channel with a reason.
-	 * @param channel the channel to part
-	 * @param reason the reason for parting
+	 * 
+	 * @param channel
+	 *            the channel to part
+	 * @param reason
+	 *            the reason for parting
 	 */
 	public void part(String channel, String reason) {
 		this.send("PART " + channel + " :" + reason + "\r\n");
@@ -302,34 +322,40 @@ public abstract class Bot implements Client {
 
 	/**
 	 * Instructs the bot to part the specified channel with a reason.
-	 * @param channel the channel to part
-	 * @param reason the reason for parting
-	 * @param session the session to part on
+	 * 
+	 * @param channel
+	 *            the channel to part
+	 * @param reason
+	 *            the reason for parting
+	 * @param session
+	 *            the session to part on
 	 */
 	public void part(String channel, String reason, Channel session) {
 		this.send("PART " + channel + " :" + reason + "\r\n", session);
 	}
-	
+
 	/**
 	 * Instructs the bot to quit.
 	 */
 	public void quit() {
 		this.send("QUIT\r\n");
 	}
-	
+
 	/**
 	 * Instructs the bot to quit.
 	 * 
-	 * @param session the session to quit from
+	 * @param session
+	 *            the session to quit from
 	 */
 	public void quit(Channel session) {
 		this.send("QUIT\r\n", session);
 	}
-	
+
 	/**
 	 * Instructs the bot to quit with a reason.
 	 * 
-	 * @param reason the reason for quitting
+	 * @param reason
+	 *            the reason for quitting
 	 */
 	public void quit(String reason) {
 		this.send("QUIT :" + reason + "\r\n");
@@ -338,61 +364,76 @@ public abstract class Bot implements Client {
 	/**
 	 * Instructs the bot to quit with a reason.
 	 * 
-	 * @param reason the reason for quitting
-	 * @param session the session to quit from
+	 * @param reason
+	 *            the reason for quitting
+	 * @param session
+	 *            the session to quit from
 	 */
 	public void quit(String reason, Channel session) {
 		this.send("QUIT :" + reason + "\r\n", session);
 	}
-	
+
 	/**
 	 * Instructs the bot to send a message to the specified channel.
 	 * 
-	 * @param message the message to send
-	 * @param channel the channel to send to
+	 * @param message
+	 *            the message to send
+	 * @param channel
+	 *            the channel to send to
 	 */
 	public void say(String message, String channel) {
 		this.send("PRIVMSG " + channel + " :" + message + "\r\n");
 	}
-	
+
 	/**
 	 * Instructs the bot to send a message to the specified channel.
 	 * 
-	 * @param message the message to send
-	 * @param channel the channel to send to
-	 * @param session the session to send on
+	 * @param message
+	 *            the message to send
+	 * @param channel
+	 *            the channel to send to
+	 * @param session
+	 *            the session to send on
 	 */
 	public void say(String message, String channel, Channel session) {
 		this.send("PRIVMSG " + channel + " :" + message + "\r\n", session);
 	}
-	
+
 	/**
 	 * Instructs the bot to send a message in /me form to the specified channel.
 	 * 
-	 * @param message the message to send
-	 * @param channel the channel to send to
+	 * @param message
+	 *            the message to send
+	 * @param channel
+	 *            the channel to send to
 	 */
 	public void sayMe(String message, String channel) {
 		this.send("PRIVMSG " + channel + " :\u0001ACTION " + message + "\r\n");
 	}
-	
+
 	/**
 	 * Instructs the bot to send a message in /me form to the specified channel.
 	 * 
-	 * @param message the message to send
-	 * @param channel the channel to send to
-	 * @param session the channel to send on
+	 * @param message
+	 *            the message to send
+	 * @param channel
+	 *            the channel to send to
+	 * @param session
+	 *            the channel to send on
 	 */
 	public void sayMe(String message, String channel, Channel session) {
 		this.send("PRIVMSG " + channel + " :\u0001ACTION " + message + "\r\n", session);
 	}
-	
+
 	// Static Bot utilities
-	
+
 	/**
 	 * Finds a string within another string ignoring case.
-	 * @param needle the string to find
-	 * @param haystack the string to search in
+	 * 
+	 * @param needle
+	 *            the string to find
+	 * @param haystack
+	 *            the string to search in
 	 * @return whether or not the string was found
 	 */
 	public static boolean containsIgnoreCase(String needle, String haystack) {
@@ -403,19 +444,26 @@ public abstract class Bot implements Client {
 
 	/**
 	 * Joins a string from an array.
-	 * @param joinString the string to use for joining
-	 * @param message the array to use
+	 * 
+	 * @param joinString
+	 *            the string to use for joining
+	 * @param message
+	 *            the array to use
 	 * @return the joined string
 	 */
 	public static String join(String joinString, String[] message) {
 		return joinFromIndex(joinString, 0, message);
 	}
-	
+
 	/**
 	 * Joins a string in an array starting at the specified index.
-	 * @param joinString the string to use for joining
-	 * @param index the index to start at
-	 * @param message the array to use
+	 * 
+	 * @param joinString
+	 *            the string to use for joining
+	 * @param index
+	 *            the index to start at
+	 * @param message
+	 *            the array to use
 	 * @return the string joined from the specified index
 	 */
 	public static String joinFromIndex(String joinString, int index, String[] message) {

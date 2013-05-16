@@ -29,12 +29,15 @@ package us.aaronweiss.juicebot;
  */
 public abstract class ManagedBot extends AutoBot {
 	protected String owner;
-	
+
 	/**
-	 * Creates a message-based <code>ManagedBot</code> with the desired name and owner.
+	 * Creates a message-based <code>ManagedBot</code> with the desired name and
+	 * owner.
 	 * 
-	 * @param username the desired username
-	 * @param owner the bot's owner
+	 * @param username
+	 *            the desired username
+	 * @param owner
+	 *            the bot's owner
 	 */
 	public ManagedBot(String username, String owner) {
 		super(username);
@@ -42,17 +45,21 @@ public abstract class ManagedBot extends AutoBot {
 	}
 
 	/**
-	 * Creates a message-based <code>ManagedBot</code> with the desired name and owner over SSL.
+	 * Creates a message-based <code>ManagedBot</code> with the desired name and
+	 * owner over SSL.
 	 * 
-	 * @param username the desired username
-	 * @param owner the bot's owner
-	 * @param useSSL whether or not to use SSL.
+	 * @param username
+	 *            the desired username
+	 * @param owner
+	 *            the bot's owner
+	 * @param useSSL
+	 *            whether or not to use SSL.
 	 */
 	public ManagedBot(String username, String owner, boolean useSSL) {
 		super(username, false, useSSL);
 		this.owner = owner;
 	}
-	
+
 	@Override
 	public void receive(Message message) {
 		boolean skipUser = false;
@@ -62,19 +69,21 @@ public abstract class ManagedBot extends AutoBot {
 			this.receivedUser(message);
 		super.receive(message);
 	}
-	
+
 	/**
 	 * Receives a message from the bot owner.
 	 * 
-	 * @param message the message received
+	 * @param message
+	 *            the message received
 	 * @return whether or not any admin commands were executed
 	 */
 	public abstract boolean receivedAdmin(Message message);
-	
+
 	/**
 	 * Receives a normal user-message.
 	 * 
-	 * @param message the message received
+	 * @param message
+	 *            the message received
 	 */
 	public abstract void receivedUser(Message message);
 }

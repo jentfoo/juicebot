@@ -22,6 +22,7 @@ package us.aaronweiss.juicebot;
 
 /**
  * An enumeration of server response codes based on RFC 1459.
+ * 
  * @author Aaron Weiss
  * @version 1.0
  * @since 1.0
@@ -102,7 +103,7 @@ public enum ServerResponseCode {
 	RPL_ADMINLOC1(257),
 	RPL_ADMINLOC2(258),
 	RPL_ADMINEMAIL(259),
-	
+
 	// Error Replies (prefixed by ERR)
 	ERR_NOSUCHNICK(401),
 	ERR_NOSUCHSERVER(402),
@@ -149,15 +150,17 @@ public enum ServerResponseCode {
 	ERR_UMODEUNKNOWNFLAG(501),
 	ERR_USERSDONTMATCH(502);
 	public final int value;
-	
+
 	/**
 	 * Creates a new server response code.
-	 * @param value the value of the response code
+	 * 
+	 * @param value
+	 *            the value of the response code
 	 */
 	private ServerResponseCode(int value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public String toString() {
 		return Integer.toString(value);

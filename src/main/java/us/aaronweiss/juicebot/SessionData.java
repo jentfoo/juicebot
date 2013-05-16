@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class SessionData {
 	public final Server server;
-	
+
 	/**
 	 * Creates a new session data object.
 	 */
@@ -45,7 +45,8 @@ public class SessionData {
 	/**
 	 * Receives a new message for parsing.
 	 * 
-	 * @param message the message to parse
+	 * @param message
+	 *            the message to parse
 	 */
 	public void receive(Message message) {
 		receive(message.toString());
@@ -54,7 +55,8 @@ public class SessionData {
 	/**
 	 * Receives a new message for parsing.
 	 * 
-	 * @param message the message to parse
+	 * @param message
+	 *            the message to parse
 	 */
 	public void receive(String message) {
 		receive(message.split(" "));
@@ -63,10 +65,11 @@ public class SessionData {
 	/**
 	 * Receives a new message for parsing.
 	 * 
-	 * @param message the message to parse
+	 * @param message
+	 *            the message to parse
 	 */
 	public void receive(String[] message) {
-		if (message.length >= 5) { 
+		if (message.length >= 5) {
 			Channel ch;
 			if (this.server.channels.get(message[4]) != null)
 				ch = this.server.channels.get(message[4]);
@@ -93,7 +96,7 @@ public class SessionData {
 			this.server.channels.put(ch.name, ch);
 		}
 	}
-	
+
 	/**
 	 * An object representation of the IRC Server.
 	 * 
@@ -103,39 +106,41 @@ public class SessionData {
 	 */
 	public class Server {
 		public final Map<String, Channel> channels;
-		
+
 		/**
 		 * Creates a new <code>Server</code>.
 		 */
 		public Server() {
 			this.channels = new HashMap<String, Channel>();
 		}
-		
+
 		/**
-		 * Gets the total number of users online as determined from received messages.
+		 * Gets the total number of users online as determined from received
+		 * messages.
 		 * 
 		 * @return the total number of users online
 		 */
 		public int online() {
 			int ret = 0;
-			for (Channel ch : channels.values()) 
+			for (Channel ch : channels.values())
 				ret += ch.userCount();
 			return ret;
 		}
 
 		/**
-		 * Gets the total number of opers online as determined from received messages.
+		 * Gets the total number of opers online as determined from received
+		 * messages.
 		 * 
 		 * @return the total number of opers online
 		 */
 		public int opersOnline() {
 			int ret = 0;
-			for (Channel ch : channels.values()) 
+			for (Channel ch : channels.values())
 				ret += ch.operCount();
 			return ret;
 		}
 	}
-	
+
 	/**
 	 * An object representation of an IRC Channel.
 	 * 
@@ -147,17 +152,18 @@ public class SessionData {
 		public final String name;
 		public final List<String> users;
 		protected String topic = "feature currently broken. :(";
-		
+
 		/**
 		 * Creates a new <code>Channel</code>.
 		 * 
-		 * @param name the name of the channel
+		 * @param name
+		 *            the name of the channel
 		 */
 		public Channel(String name) {
 			this.name = name;
 			this.users = new ArrayList<String>();
 		}
-		
+
 		/**
 		 * Gets the number of users in the channel.
 		 * 
@@ -179,7 +185,7 @@ public class SessionData {
 					ret++;
 			return ret;
 		}
-		
+
 		/**
 		 * Gets the number of half ops in the channel.
 		 * 
@@ -192,7 +198,7 @@ public class SessionData {
 					ret++;
 			return ret;
 		}
-		
+
 		/**
 		 * Gets the number of voiced users in the channel.
 		 * 
@@ -205,10 +211,10 @@ public class SessionData {
 					ret++;
 			return ret;
 		}
-		
+
 		/**
-		 * Gets the topic of the channel.
-		 * n.b. as of juicebot 2.0.0, this feature is not working
+		 * Gets the topic of the channel. n.b. as of juicebot 2.0.0, this
+		 * feature is not working
 		 * 
 		 * @return the topic, or null if none set
 		 */

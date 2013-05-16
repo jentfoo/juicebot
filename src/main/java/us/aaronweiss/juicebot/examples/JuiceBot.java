@@ -28,8 +28,9 @@ import us.aaronweiss.juicebot.Bot;
 import us.aaronweiss.juicebot.SimpleBot;
 
 /**
- * A bot that responds to phrases containing "gas" and "jews" with a fun message.
- * <code>JuiceBot</code> serves as an example of the simple messaging API.
+ * A bot that responds to phrases containing "gas" and "jews" with a fun
+ * message. <code>JuiceBot</code> serves as an example of the simple messaging
+ * API.
  * 
  * @author Aaron Weiss
  * @version 1.0
@@ -46,7 +47,8 @@ public class JuiceBot extends SimpleBot {
 	/**
 	 * Creates a <code>JuiceBot</code> over SSL.
 	 * 
-	 * @param useSSL whether or not to use SSL
+	 * @param useSSL
+	 *            whether or not to use SSL
 	 */
 	public JuiceBot(boolean useSSL) {
 		super("JuiceBot", useSSL);
@@ -58,7 +60,7 @@ public class JuiceBot extends SimpleBot {
 	public void joinAll() {
 		this.join("#vana");
 	}
-	
+
 	@Override
 	public void receive(String[] message, Channel session) {
 		if (message[0].endsWith(username()) && message[1].equals("MODE") && message[2].equals(username()))
@@ -77,7 +79,8 @@ public class JuiceBot extends SimpleBot {
 	/**
 	 * Runs this bot.
 	 * 
-	 * @param args the server to connect to
+	 * @param args
+	 *            the server to connect to
 	 */
 	public static void main(String[] args) {
 		String server = "irc.fyrechat.net:6667";

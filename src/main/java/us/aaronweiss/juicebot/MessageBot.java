@@ -33,7 +33,8 @@ public abstract class MessageBot extends Bot {
 	/**
 	 * Creates a <code>MessageBot</code>.
 	 * 
-	 * @param username the bot's username
+	 * @param username
+	 *            the bot's username
 	 */
 	public MessageBot(String username) {
 		super(username, false);
@@ -42,13 +43,15 @@ public abstract class MessageBot extends Bot {
 	/**
 	 * Creates a <code>MessageBot</code> over SSL.
 	 * 
-	 * @param username the bot's username
-	 * @param useSSL whether or not to use SSL
+	 * @param username
+	 *            the bot's username
+	 * @param useSSL
+	 *            whether or not to use SSL
 	 */
 	public MessageBot(String username, boolean useSSL) {
 		super(username, false, useSSL);
 	}
-	
+
 	@Override
 	public void receive(String[] message, Channel session) {
 		throw new IllegalArgumentException("MessageBots don't support the simple messaging API.");

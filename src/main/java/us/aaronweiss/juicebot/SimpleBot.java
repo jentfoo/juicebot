@@ -22,7 +22,6 @@ package us.aaronweiss.juicebot;
 
 import io.netty.channel.Channel;
 
-
 /**
  * A <code>Bot</code> using the Simple String Array Messaging API.
  * 
@@ -34,7 +33,8 @@ public abstract class SimpleBot extends Bot {
 	/**
 	 * Creates a <code>SimpleBot</code>.
 	 * 
-	 * @param username the bot's username
+	 * @param username
+	 *            the bot's username
 	 */
 	public SimpleBot(String username) {
 		super(username, true);
@@ -43,13 +43,15 @@ public abstract class SimpleBot extends Bot {
 	/**
 	 * Creates a <code>SimpleBot</code> over SSL.
 	 * 
-	 * @param username the bot's username
-	 * @param useSSL whether or not to use SSL
+	 * @param username
+	 *            the bot's username
+	 * @param useSSL
+	 *            whether or not to use SSL
 	 */
 	public SimpleBot(String username, boolean useSSL) {
 		super(username, true, useSSL);
 	}
-	
+
 	@Override
 	public abstract void receive(String[] message, Channel session);
 

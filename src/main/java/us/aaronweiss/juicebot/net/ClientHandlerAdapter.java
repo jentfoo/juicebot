@@ -42,7 +42,8 @@ public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<St
 	/**
 	 * Creates a <code>ClientHandlerAdapter</code> with auto-ping.
 	 * 
-	 * @param client the client to handle
+	 * @param client
+	 *            the client to handle
 	 */
 	public ClientHandlerAdapter(Client client) {
 		this(client, JuiceBotDefaults.VERBOSE_BY_DEFAULT, true);
@@ -51,8 +52,10 @@ public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<St
 	/**
 	 * Creates a <code>ClientHandlerAdapter</code> with auto-ping.
 	 * 
-	 * @param client the client to handle
-	 * @param verbose whether or not to be verbose
+	 * @param client
+	 *            the client to handle
+	 * @param verbose
+	 *            whether or not to be verbose
 	 */
 	public ClientHandlerAdapter(Client client, boolean verbose) {
 		this(client, verbose, true);
@@ -61,9 +64,12 @@ public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<St
 	/**
 	 * Creates a <code>ClientHandlerAdapter</code>.
 	 * 
-	 * @param client the client to handle
-	 * @param verbose whether or not to be verbose
-	 * @param autoPing whether or not to automatically handle pings
+	 * @param client
+	 *            the client to handle
+	 * @param verbose
+	 *            whether or not to be verbose
+	 * @param autoPing
+	 *            whether or not to automatically handle pings
 	 */
 	public ClientHandlerAdapter(Client client, boolean verbose, boolean autoPing) {
 		this.client = client;
