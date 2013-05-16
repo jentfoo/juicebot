@@ -68,3 +68,5 @@ nbactions.xml
 nb-configuration.xml
 target/*/
 target/
+doc/
+doc/*
