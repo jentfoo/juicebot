@@ -28,7 +28,20 @@ import us.aaronweiss.juicebot.Bot;
 import us.aaronweiss.juicebot.ManagedBot;
 import us.aaronweiss.juicebot.Message;
 
+/**
+ * A bot modelled after the demon, Sweet, from Buffy the Vampire Slayer's "Once More With Feeling."
+ * <code>Sweet</code> is a demonstration of <code>ManagedBot</code>s as well as the POJO message API.
+ * 
+ * @author Aaron Weiss
+ * @version 1.0
+ * @since 2.0
+ */
 public class Sweet extends ManagedBot {
+	/**
+	 * Creates the demon, <code>Sweet</code>.
+	 * 
+	 * @param owner the owner of the bot
+	 */
 	public Sweet(String owner) {
 		super("Sweet", owner);
 	}
@@ -57,9 +70,15 @@ public class Sweet extends ManagedBot {
 		}
 	}
 
+	/**
+	 * Runs this bot.
+	 * 
+	 * @param args the server to connect to
+	 */
 	public static void main(String[] args) {
-		// String server = args[0];
 		String server = "irc.fyrechat.net:6667";
+		if (args.length > 0)
+			server = args[0];
 		Bot bot = new Sweet("aaronweiss74");
 		Channel session = bot.connect(server);
 		Scanner input = new Scanner(System.in);

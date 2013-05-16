@@ -22,11 +22,29 @@ package us.aaronweiss.juicebot;
 
 import io.netty.channel.Channel;
 
+/**
+ * A <code>Bot</code> using the POJO Messaging API.
+ * 
+ * @author Aaron Weiss
+ * @version 1.0
+ * @since 2.0
+ */
 public abstract class MessageBot extends Bot {
+	/**
+	 * Creates a <code>MessageBot</code>.
+	 * 
+	 * @param username the bot's username
+	 */
 	public MessageBot(String username) {
 		super(username, false);
 	}
 
+	/**
+	 * Creates a <code>MessageBot</code> over SSL.
+	 * 
+	 * @param username the bot's username
+	 * @param useSSL whether or not to use SSL
+	 */
 	public MessageBot(String username, boolean useSSL) {
 		super(username, false, useSSL);
 	}

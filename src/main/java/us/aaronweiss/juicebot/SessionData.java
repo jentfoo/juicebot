@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The core data element for the Information API.
  * 
  * @author Aaron Weiss
  * @version 1.0
@@ -34,18 +35,36 @@ import java.util.Map;
 public class SessionData {
 	public final Server server;
 	
+	/**
+	 * Creates a new session data object.
+	 */
 	public SessionData() {
 		this.server = new Server();
 	}
 
+	/**
+	 * Receives a new message for parsing.
+	 * 
+	 * @param message the message to parse
+	 */
 	public void receive(Message message) {
 		receive(message.toString());
 	}
 
+	/**
+	 * Receives a new message for parsing.
+	 * 
+	 * @param message the message to parse
+	 */
 	public void receive(String message) {
 		receive(message.split(" "));
 	}
-	
+
+	/**
+	 * Receives a new message for parsing.
+	 * 
+	 * @param message the message to parse
+	 */
 	public void receive(String[] message) {
 		if (message.length >= 5) { 
 			Channel ch;
@@ -76,6 +95,7 @@ public class SessionData {
 	}
 	
 	/**
+	 * An object representation of the IRC Server.
 	 * 
 	 * @author Aaron Weiss
 	 * @version 1.0
@@ -84,17 +104,30 @@ public class SessionData {
 	public class Server {
 		public final Map<String, Channel> channels;
 		
+		/**
+		 * Creates a new <code>Server</code>.
+		 */
 		public Server() {
 			this.channels = new HashMap<String, Channel>();
 		}
 		
+		/**
+		 * Gets the total number of users online as determined from received messages.
+		 * 
+		 * @return the total number of users online
+		 */
 		public int online() {
 			int ret = 0;
 			for (Channel ch : channels.values()) 
 				ret += ch.userCount();
 			return ret;
 		}
-		
+
+		/**
+		 * Gets the total number of opers online as determined from received messages.
+		 * 
+		 * @return the total number of opers online
+		 */
 		public int opersOnline() {
 			int ret = 0;
 			for (Channel ch : channels.values()) 
@@ -104,6 +137,7 @@ public class SessionData {
 	}
 	
 	/**
+	 * An object representation of an IRC Channel.
 	 * 
 	 * @author Aaron Weiss
 	 * @version 1.0
@@ -114,15 +148,30 @@ public class SessionData {
 		public final List<String> users;
 		protected String topic = "feature currently broken. :(";
 		
+		/**
+		 * Creates a new <code>Channel</code>.
+		 * 
+		 * @param name the name of the channel
+		 */
 		public Channel(String name) {
 			this.name = name;
 			this.users = new ArrayList<String>();
 		}
 		
+		/**
+		 * Gets the number of users in the channel.
+		 * 
+		 * @return the number users in channel
+		 */
 		public int userCount() {
 			return users.size();
 		}
-		
+
+		/**
+		 * Gets the number of opers in the channel.
+		 * 
+		 * @return the number opers in channel
+		 */
 		public int operCount() {
 			int ret = 0;
 			for (String user : users)
@@ -131,6 +180,11 @@ public class SessionData {
 			return ret;
 		}
 		
+		/**
+		 * Gets the number of half ops in the channel.
+		 * 
+		 * @return the number half ops in channel
+		 */
 		public int halfOpCount() {
 			int ret = 0;
 			for (String user : users)
@@ -139,6 +193,11 @@ public class SessionData {
 			return ret;
 		}
 		
+		/**
+		 * Gets the number of voiced users in the channel.
+		 * 
+		 * @return the number voiced users in channel
+		 */
 		public int voiceCount() {
 			int ret = 0;
 			for (String user : users)
@@ -147,6 +206,12 @@ public class SessionData {
 			return ret;
 		}
 		
+		/**
+		 * Gets the topic of the channel.
+		 * n.b. as of juicebot 2.0.0, this feature is not working
+		 * 
+		 * @return the topic, or null if none set
+		 */
 		public String topic() {
 			return topic;
 		}
