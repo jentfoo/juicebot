@@ -21,7 +21,8 @@
 package us.aaronweiss.juicebot.net;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.MessageList;
 import us.aaronweiss.juicebot.Client;
 import us.aaronweiss.juicebot.Message;
 import us.aaronweiss.juicebot.internal.InternalUtilities;
@@ -29,47 +30,41 @@ import us.aaronweiss.juicebot.internal.JuiceBotDefaults;
 
 /**
  * An inbound-only message handler to provide client functionality.
- * 
+ *
  * @author Aaron Weiss
- * @version 2.0
- * @since 1.0
+ * @version 2.0.0
+ * @since 1.0.0
  */
-public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<String> {
+public class ClientHandlerAdapter extends ChannelInboundHandlerAdapter {
 	protected final boolean verbose, autoPing;
-	private boolean connected = false;
+	private boolean connected;
 	protected final Client client;
 
 	/**
-	 * Creates a <code>ClientHandlerAdapter</code> with auto-ping.
-	 * 
-	 * @param client
-	 *            the client to handle
+	 * Creates a {@code ClientHandlerAdapter} with auto-ping.
+	 *
+	 * @param client the client to handle
 	 */
 	public ClientHandlerAdapter(Client client) {
 		this(client, JuiceBotDefaults.VERBOSE_BY_DEFAULT, true);
 	}
 
 	/**
-	 * Creates a <code>ClientHandlerAdapter</code> with auto-ping.
-	 * 
-	 * @param client
-	 *            the client to handle
-	 * @param verbose
-	 *            whether or not to be verbose
+	 * Creates a {@code ClientHandlerAdapter} with auto-ping.
+	 *
+	 * @param client  the client to handle
+	 * @param verbose whether or not to be verbose
 	 */
 	public ClientHandlerAdapter(Client client, boolean verbose) {
 		this(client, verbose, true);
 	}
 
 	/**
-	 * Creates a <code>ClientHandlerAdapter</code>.
-	 * 
-	 * @param client
-	 *            the client to handle
-	 * @param verbose
-	 *            whether or not to be verbose
-	 * @param autoPing
-	 *            whether or not to automatically handle pings
+	 * Creates a {@code ClientHandlerAdapter}.
+	 *
+	 * @param client   the client to handle
+	 * @param verbose  whether or not to be verbose
+	 * @param autoPing whether or not to automatically handle pings
 	 */
 	public ClientHandlerAdapter(Client client, boolean verbose, boolean autoPing) {
 		this.client = client;
@@ -78,30 +73,33 @@ public class ClientHandlerAdapter extends ChannelInboundMessageHandlerAdapter<St
 	}
 
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, String message) throws Exception {
+	public void messageReceived(ChannelHandlerContext ctx, MessageList<Object> messages) throws Exception {
 		if (!connected) {
 			connected = true;
-			this.client.connected(ctx.channel());
+			client.connected(ctx.channel());
 		}
-		for (String command : message.split("\r\n")) {
-			if (verbose)
-				InternalUtilities.println(command);
-			if (autoPing && command.contains("PING") && command.indexOf("PING") < command.indexOf(':', 1) && !command.contains("supported")) {
-				String pong = command.replaceFirst("PING", "PONG").substring(command.indexOf("PING"));
+		for (Object o : messages) {
+			String message = (String) o;
+			for (String command : message.split("\r\n")) {
 				if (verbose)
-					InternalUtilities.println(pong);
-				this.client.send(pong);
-			} else if (this.client.isSimpleMessageReceiver()) {
-				this.client.receive(command, ctx.channel());
-			} else {
-				this.client.receive(new Message(command.split(" "), this.client, ctx.channel()));
+					InternalUtilities.println(command);
+				if (autoPing && command.contains("PING") && command.indexOf("PING") < command.indexOf(':', 1) && !command.contains("supported")) {
+					String pong = command.replaceFirst("PING", "PONG").substring(command.indexOf("PING"));
+					if (verbose)
+						InternalUtilities.println(pong);
+					client.send(pong);
+				} else if (client.isSimpleMessageReceiver()) {
+					client.receive(command, ctx.channel());
+				} else {
+					client.receive(new Message(command.split(" "), client, ctx.channel()));
+				}
 			}
 		}
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		this.connected = false;
-		this.client.disconnected(ctx.channel());
+		connected = false;
+		client.disconnected(ctx.channel());
 	}
 }

@@ -7,16 +7,16 @@ import us.aaronweiss.juicebot.internal.JuiceBotDefaults;
 
 /**
  * A bot that says "METAL GEAR" upon seeing its name, Snake.
- * <code>MetalGear</code> serves as a demonstration of
- * <code>JuiceBotDefaults</code> and <code>AutoBot</code>s.
- * 
+ * {@code MetalGear} serves as a demonstration of
+ * {@code JuiceBotDefaults} and {@code AutoBot}s.
+ *
  * @author Aaron Weiss
- * @version 1.0
- * @since 2.0
+ * @version 1.0.1
+ * @since 2.0.0
  */
 public class MetalGear extends AutoBot {
 	/**
-	 * Creates a <code>MetalGear</code> bot named SolidSnake.
+	 * Creates a {@code MetalGear} bot named SolidSnake.
 	 */
 	public MetalGear() {
 		super("SolidSnake");
@@ -39,7 +39,7 @@ public class MetalGear extends AutoBot {
 
 	/**
 	 * Creates a new slightly randomized "METAL GEAR" string.
-	 * 
+	 *
 	 * @return the new "METAL GEAR" string
 	 */
 	public String newMetalGear() {
@@ -53,9 +53,8 @@ public class MetalGear extends AutoBot {
 
 	/**
 	 * Runs this bot.
-	 * 
-	 * @param args
-	 *            the server to connect to
+	 *
+	 * @param args the server to connect to
 	 */
 	public static void main(String[] args) {
 		JuiceBotDefaults.VERBOSE_BY_DEFAULT = false;

@@ -21,35 +21,33 @@
 package us.aaronweiss.juicebot.examples;
 
 import io.netty.channel.Channel;
-
-import java.util.Scanner;
-
 import us.aaronweiss.juicebot.Bot;
 import us.aaronweiss.juicebot.DataAwareBot;
 import us.aaronweiss.juicebot.Message;
 import us.aaronweiss.juicebot.SessionData;
 
+import java.util.Scanner;
+
 /**
- * A simple, next-to-useless statistics bot. <code>Stati</code> serves as a
+ * A simple, next-to-useless statistics bot. {@code Stati} serves as a
  * light demonstration of the information API.
- * 
+ *
  * @author Aaron Weiss
- * @version 1.0
- * @since 2.0
+ * @version 1.0.1
+ * @since 2.0.0
  */
 public class Stati extends DataAwareBot {
 	/**
-	 * Creates <code>Stati</code>.
+	 * Creates {@code Stati}.
 	 */
 	public Stati() {
 		super("Stati", false);
 	}
 
 	/**
-	 * Creates <code>Stati</code> over SSL.
-	 * 
-	 * @param useSSL
-	 *            whether or not to use SSL
+	 * Creates {@code Stati} over SSL.
+	 *
+	 * @param useSSL whether or not to use SSL
 	 */
 	public Stati(boolean useSSL) {
 		super("Stati", false, useSSL);
@@ -57,7 +55,7 @@ public class Stati extends DataAwareBot {
 
 	@Override
 	public void joinAll() {
-		this.join("#vana");
+		join("#vana");
 	}
 
 	@Override
@@ -75,7 +73,7 @@ public class Stati extends DataAwareBot {
 			} else if (Bot.containsIgnoreCase("join", message.message())) {
 				for (String token : message.splitMessage()) {
 					if (token.startsWith("#"))
-						this.join(token);
+						join(token);
 				}
 				message.replyDirect("Done.");
 			}
@@ -86,9 +84,8 @@ public class Stati extends DataAwareBot {
 
 	/**
 	 * Runs this bot.
-	 * 
-	 * @param args
-	 *            the server to connect to
+	 *
+	 * @param args the server to connect to
 	 */
 	public static void main(String[] args) {
 		String server = "irc.fyrechat.net:6667";

@@ -21,11 +21,11 @@
 package us.aaronweiss.juicebot.internal;
 
 /**
- * A set of changeable defaults for the juicebot library.
- * 
+ * A set of changeable defaults for the {@code juicebot} library.
+ *
  * @author Aaron Weiss
- * @version 1.0
- * @since 2.0
+ * @version 1.0.0
+ * @since 2.0.0
  */
 public class JuiceBotDefaults {
 	/**

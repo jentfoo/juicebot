@@ -21,28 +21,26 @@
 package us.aaronweiss.juicebot.examples;
 
 import io.netty.channel.Channel;
-
-import java.util.Scanner;
-
 import us.aaronweiss.juicebot.Bot;
 import us.aaronweiss.juicebot.ManagedBot;
 import us.aaronweiss.juicebot.Message;
 
+import java.util.Scanner;
+
 /**
  * A bot modelled after the demon, Sweet, from Buffy the Vampire Slayer's
- * "Once More With Feeling." <code>Sweet</code> is a demonstration of
- * <code>ManagedBot</code>s as well as the POJO message API.
- * 
+ * "Once More With Feeling." {@code Sweet} is a demonstration of
+ * {@code ManagedBot}s as well as the POJO message API.
+ *
  * @author Aaron Weiss
- * @version 1.0
- * @since 2.0
+ * @version 1.0.1
+ * @since 2.0.0
  */
 public class Sweet extends ManagedBot {
 	/**
-	 * Creates the demon, <code>Sweet</code>.
-	 * 
-	 * @param owner
-	 *            the owner of the bot
+	 * Creates the demon, {@code Sweet}.
+	 *
+	 * @param owner the owner of the bot
 	 */
 	public Sweet(String owner) {
 		super("Sweet", owner);
@@ -50,7 +48,7 @@ public class Sweet extends ManagedBot {
 
 	@Override
 	public void joinAll() {
-		this.join("#vana");
+		join("#vana");
 	}
 
 	@Override
@@ -58,7 +56,7 @@ public class Sweet extends ManagedBot {
 		boolean received = false;
 		if (message.message().contains(username())) {
 			if (Bot.containsIgnoreCase("quit", message.message()) || Bot.containsIgnoreCase("bye", message.message())) {
-				this.quit(owner + " said so.");
+				quit(owner + " said so.");
 				received = true;
 			}
 		}
@@ -74,9 +72,8 @@ public class Sweet extends ManagedBot {
 
 	/**
 	 * Runs this bot.
-	 * 
-	 * @param args
-	 *            the server to connect to
+	 *
+	 * @param args the server to connect to
 	 */
 	public static void main(String[] args) {
 		String server = "irc.fyrechat.net:6667";

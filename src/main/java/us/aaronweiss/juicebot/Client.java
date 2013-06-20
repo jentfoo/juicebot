@@ -26,150 +26,131 @@ import java.net.SocketAddress;
 
 /**
  * A basic abstraction for all IRC clients.
- * 
+ *
  * @author Aaron Weiss
- * @version 2.0
- * @since 1.0
+ * @version 2.0.0
+ * @since 1.0.0
  */
 public interface Client {
 	/**
 	 * Connects to the specified address.
-	 * 
-	 * @param address
-	 *            hostname, IPv6, or IPv4 name with or without port (assumes
-	 *            default as 6667)
+	 *
+	 * @param address hostname, IPv6, or IPv4 name with or without port (assumes
+	 *                default as 6667)
 	 * @return the newly created session
 	 */
 	public Channel connect(String address);
 
 	/**
 	 * Connects to the specified address.
-	 * 
-	 * @param address
-	 *            hostname, IPv6, or IPv4 name
-	 * @param port
-	 *            the port to connect on
+	 *
+	 * @param address hostname, IPv6, or IPv4 name
+	 * @param port    the port to connect on
 	 * @return the newly created session
 	 */
 	public Channel connect(String address, String port);
 
 	/**
 	 * Connects to the specified address.
-	 * 
-	 * @param address
-	 *            the <code>SocketAddress</code> to connect to
+	 *
+	 * @param address the <code>SocketAddress</code> to connect to
 	 * @return the newly created session
 	 */
 	public Channel connect(SocketAddress address);
 
 	/**
 	 * Disconnects from the specified session.
-	 * 
-	 * @param session
-	 *            the session to disconnect from
+	 *
+	 * @param session the session to disconnect from
 	 */
 	public void disconnect(Channel session);
 
 	/**
 	 * Performs a set of actions upon opening a new session.
-	 * 
-	 * @param session
-	 *            the newly connected session
+	 *
+	 * @param session the newly connected session
 	 */
 	public void connected(Channel session);
 
 	/**
 	 * Performs a set of actions periodically. n.b. you must set Bot.timeUnit
 	 * and/or Bot.periodicTime. (Defaults: Seconds and -1, respectively)
-	 * 
-	 * @param session
-	 *            the open session
+	 *
+	 * @param session the open session
 	 */
 	public void periodic(Channel session);
 
 	/**
 	 * Performs a set of actions upon closing a session.
-	 * 
-	 * @param session
-	 *            the now-closed session
+	 *
+	 * @param session the now-closed session
 	 */
 	public void disconnected(Channel session);
 
 	/**
 	 * Gets whether or not the client is connected to any sessions.
-	 * 
+	 *
 	 * @return the client's current connection status
 	 */
 	public boolean isConnected();
 
 	/**
 	 * Gets whether or not the client uses the simple messaging API.
-	 * 
+	 *
 	 * @return the client's usage of the simple messaging API
 	 */
 	public boolean isSimpleMessageReceiver();
 
 	/**
 	 * Sends a message to all connected sessions.
-	 * 
-	 * @param message
-	 *            the message to send
+	 *
+	 * @param message the message to send
 	 */
 	public void send(String message);
 
 	/**
 	 * Sends a message to the specified session.
-	 * 
-	 * @param message
-	 *            the message to send
-	 * @param session
-	 *            the session to send it to
+	 *
+	 * @param message the message to send
+	 * @param session the session to send it to
 	 */
 	public void send(String message, Channel session);
 
 	/**
 	 * Sends a message to all connected sessions.
-	 * 
-	 * @param message
-	 *            the message to send (split as words)
+	 *
+	 * @param message the message to send (split as words)
 	 */
 	public void send(String[] message);
 
 	/**
 	 * Sends a message to the specified session.
-	 * 
-	 * @param message
-	 *            the message to send (split as words)
-	 * @param session
-	 *            the session to send it to
+	 *
+	 * @param message the message to send (split as words)
+	 * @param session the session to send it to
 	 */
 	public void send(String[] message, Channel session);
 
 	/**
 	 * Receives a whole message for the simple messaging API.
-	 * 
-	 * @param message
-	 *            the message being received
-	 * @param session
-	 *            the session receiving it from
+	 *
+	 * @param message the message being received
+	 * @param session the session receiving it from
 	 */
 	public void receive(String message, Channel session);
 
 	/**
 	 * Receives a message split as words for the simple messaging API.
-	 * 
-	 * @param message
-	 *            the message being received (split as words)
-	 * @param session
-	 *            the session receiving it from
+	 *
+	 * @param message the message being received (split as words)
+	 * @param session the session receiving it from
 	 */
 	public void receive(String[] message, Channel session);
 
 	/**
 	 * Receives a message through the POJO messaging API.
-	 * 
-	 * @param message
-	 *            the message being received
+	 *
+	 * @param message the message being received
 	 */
 	public void receive(Message message);
 }

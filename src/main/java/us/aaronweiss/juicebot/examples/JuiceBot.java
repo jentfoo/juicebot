@@ -21,34 +21,32 @@
 package us.aaronweiss.juicebot.examples;
 
 import io.netty.channel.Channel;
-
-import java.util.Scanner;
-
 import us.aaronweiss.juicebot.Bot;
 import us.aaronweiss.juicebot.SimpleBot;
 
+import java.util.Scanner;
+
 /**
  * A bot that responds to phrases containing "gas" and "jews" with a fun
- * message. <code>JuiceBot</code> serves as an example of the simple messaging
+ * message. {@code JuiceBot} serves as an example of the simple messaging
  * API.
- * 
+ *
  * @author Aaron Weiss
- * @version 1.0
- * @since 2.0
+ * @version 1.0.0
+ * @since 2.0.0
  */
 public class JuiceBot extends SimpleBot {
 	/**
-	 * Creates a <code>JuiceBot</code>.
+	 * Creates a {@code JuiceBot}.
 	 */
 	public JuiceBot() {
 		super("JuiceBot");
 	}
 
 	/**
-	 * Creates a <code>JuiceBot</code> over SSL.
-	 * 
-	 * @param useSSL
-	 *            whether or not to use SSL
+	 * Creates a {@code JuiceBot} over SSL.
+	 *
+	 * @param useSSL whether or not to use SSL
 	 */
 	public JuiceBot(boolean useSSL) {
 		super("JuiceBot", useSSL);
@@ -58,13 +56,13 @@ public class JuiceBot extends SimpleBot {
 	 * Instructs the bot to join all of its home channels.
 	 */
 	public void joinAll() {
-		this.join("#vana");
+		join("#vana");
 	}
 
 	@Override
 	public void receive(String[] message, Channel session) {
 		if (message[0].endsWith(username()) && message[1].equals("MODE") && message[2].equals(username()))
-			this.joinAll();
+			joinAll();
 		boolean gas = false, jews = false;
 		for (String token : message) {
 			if (token.equalsIgnoreCase("gas") || token.equalsIgnoreCase(":gas"))
@@ -73,14 +71,13 @@ public class JuiceBot extends SimpleBot {
 				jews = true;
 		}
 		if (gas || jews)
-			this.say("No, I said pass the juice!", message[2], session);
+			say("No, I said pass the juice!", message[2], session);
 	}
 
 	/**
 	 * Runs this bot.
-	 * 
-	 * @param args
-	 *            the server to connect to
+	 *
+	 * @param args the server to connect to
 	 */
 	public static void main(String[] args) {
 		String server = "irc.fyrechat.net:6667";

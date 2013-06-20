@@ -22,10 +22,10 @@ package us.aaronweiss.juicebot;
 
 /**
  * An enumeration of server response codes based on RFC 1459.
- * 
+ *
  * @author Aaron Weiss
- * @version 1.0
- * @since 1.0
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public enum ServerResponseCode {
 	// Valid Replies (prefixed by RPL)
@@ -153,9 +153,8 @@ public enum ServerResponseCode {
 
 	/**
 	 * Creates a new server response code.
-	 * 
-	 * @param value
-	 *            the value of the response code
+	 *
+	 * @param value the value of the response code
 	 */
 	private ServerResponseCode(int value) {
 		this.value = value;

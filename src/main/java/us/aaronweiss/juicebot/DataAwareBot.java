@@ -20,54 +20,48 @@
  */
 package us.aaronweiss.juicebot;
 
-import java.net.SocketAddress;
-
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 
+import java.net.SocketAddress;
+
 /**
  * A bot with embedded access to the information API.
- * 
+ *
  * @author Aaron Weiss
- * @version 1.0
- * @since 2.0
+ * @version 1.0.1
+ * @since 2.0.0
  */
 public abstract class DataAwareBot extends Bot {
-	protected static final AttributeKey<SessionData> sessionData = new AttributeKey<SessionData>("session-data");
+	protected static final AttributeKey<SessionData> sessionData = new AttributeKey<>("session-data");
 
 	/**
-	 * Creates a message-based <code>DataAwareBot</code> with the desired name.
-	 * 
-	 * @param username
-	 *            the desired username
+	 * Creates a message-based {@code DataAwareBot} with the desired name.
+	 *
+	 * @param username the desired username
 	 */
 	public DataAwareBot(String username) {
 		super(username);
 	}
 
 	/**
-	 * Creates a simple or message <code>DataAwareBot</code> with the desired
+	 * Creates a simple or message {@code DataAwareBot} with the desired
 	 * name.
-	 * 
-	 * @param username
-	 *            the desired username
-	 * @param simple
-	 *            whether or not to use the simple messaging API
+	 *
+	 * @param username the desired username
+	 * @param simple   whether or not to use the simple messaging API
 	 */
 	public DataAwareBot(String username, boolean simple) {
 		super(username, simple);
 	}
 
 	/**
-	 * Creates a simple or message <code>DataAwareBot</code> with the desired
+	 * Creates a simple or message {@code DataAwareBot} with the desired
 	 * name over SSL.
-	 * 
-	 * @param username
-	 *            the desired username
-	 * @param simple
-	 *            whether or not to use the simple messaging API
-	 * @param useSSL
-	 *            whether or not to use SSL
+	 *
+	 * @param username the desired username
+	 * @param simple   whether or not to use the simple messaging API
+	 * @param useSSL   whether or not to use SSL
 	 */
 	public DataAwareBot(String username, boolean simple, boolean useSSL) {
 		super(username, simple, useSSL);
@@ -88,9 +82,9 @@ public abstract class DataAwareBot extends Bot {
 	@Override
 	public void receive(Message message) {
 		if (message.toString().startsWith(":" + username() + " MODE " + username())) {
-			this.joinAll();
+			joinAll();
 		}
 		if (message != null)
-			message.session().attr(DataAwareBot.sessionData).get().receive(message);
+			message.session().attr(sessionData).get().receive(message);
 	}
 }
