@@ -4,6 +4,9 @@ juicebot is a simple and fast library for creating IRC bots using [Netty](http:/
 ### Tell me about your use cases! ###
 That's right, folks! If you're using (or would like to use) juicebot, I want to hear about it. I want to know what you like, what you don't like, what's working, what isn't, and where you think this project needs to go. You can find a bunch of ways to contact me on my website [here](http://www.aaronweiss.us/) or you can just [email me](mailto:aaronweiss74@gmail.com).
 
+### Versioning ###
+If you're wondering about versioning, as of juicebot 2, we're using [Semantic Versioning](http://semver.org/) to make life a lot easier. All this means is that version numbers will be more meaningful and less arbitrary. This will make managing juicebot as a dependency a hell of a lot easier. So, enjoy!
+
 ### An example. ###
 
 	public class Example1 extends SimpleBot {
@@ -86,7 +89,7 @@ That's right, folks! If you're using (or would like to use) juicebot, I want to 
 Just check out the Examples included in the source code! There's an improved version of the bot in Example3 named Sweet, made in honor of the demon from Buffy the Vampire Slayer's "Once More With Feeling." There's also a basic statistics bot named Stati (STAT-EE) that can provide you mostly useless information as a demonstration of the new work-in-progress information API. Of course, there's also a new version of the classic "pass the juice" JuiceBot from which the library got its name. There's also a bot named MetalGear that should demonstrate how to properly keep your bot silent on the client-side.
 
 ### Acknowledgements ###
-* [angelsl](http://www.github.com/angelsl) for helping with the IRC protocol stuff.
+* [angelsl](http://www.github.com/angelsl) for helping with the IRC protocol stuff early on.
 * [Peter Atashian](http://www.github.com/retep998) for helping with testing.
 * [rice](http://www.github.com/wahlao) for the inspiration.
 * [FyreChat](http://www.fyrechat.net/) for allowing me to build this library on it.
